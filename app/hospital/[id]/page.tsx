@@ -246,6 +246,7 @@ const HospitalDetail = () => {
               fill
               className="object-cover"
               priority // Ini kuncinya agar gambar langsung muncul tanpa delay
+              quality={80}
             />
 
             {/* Overlay */}
