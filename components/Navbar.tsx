@@ -85,9 +85,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar-sticky rounded-b-3xl border border-3xl">
+    <nav className="navbar-sticky rounded-b-3xl border border-b-3xl">
       <div className="container mx-auto px-4 ">
-        <div className="flex items-center justify-between h-14 md:h-18">
+        <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo */}
           <div
             className="flex-shrink-0 mr-6 cursor-pointer"
