@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { sanitizeInput } from "@/lib/security";
@@ -80,10 +81,12 @@ const HospitalDetail = () => {
             {/* Hero Image */}
             {hospital && (
               <div className="relative aspect-video overflow-hidden rounded-3xl">
-                <img
+                <Image
                   src={hospital.image}
                   alt={hospital.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  priority // Ini kuncinya agar gambar langsung muncul tanpa delay
                 />
 
                 {/* Overlay */}
@@ -237,10 +240,12 @@ const HospitalDetail = () => {
         <div className="lg:hidden space-y-6">
           {/* Image */}
           <div className="relative aspect-video overflow-hidden rounded-3xl">
-            <img
-              src={hospital?.image ?? ""}
-              alt={hospital?.name ?? "Hospital"}
-              className="w-full h-full object-cover"
+            <Image
+              src={hospital.image}
+              alt={hospital.name}
+              fill
+              className="object-cover"
+              priority // Ini kuncinya agar gambar langsung muncul tanpa delay
             />
 
             {/* Overlay */}
@@ -383,7 +388,6 @@ const HospitalDetail = () => {
           )}
         </div>
       </main>
-
     </div>
   );
 };
