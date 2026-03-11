@@ -12,7 +12,6 @@ const HospitalDetail = () => {
   const { getHospitalById } = useApp();
   const id = params?.id as string;
 
-
   const hospital = getHospitalById(id || "");
 
   if (!hospital) {
@@ -36,7 +35,6 @@ const HospitalDetail = () => {
             </Link>
           </div>
         </div>
-       
       </div>
     );
   }
@@ -85,8 +83,11 @@ const HospitalDetail = () => {
                   src={hospital.image}
                   alt={hospital.name}
                   fill
-                  className="object-cover"
-                  priority // Ini kuncinya agar gambar langsung muncul tanpa delay
+                  className="object-cover transition-opacity duration-500 opacity-0"
+                  onLoadingComplete={(image) =>
+                    image.classList.remove("opacity-0")
+                  }
+                  priority
                 />
 
                 {/* Overlay */}
@@ -244,9 +245,9 @@ const HospitalDetail = () => {
               src={hospital.image}
               alt={hospital.name}
               fill
-              className="object-cover"
-              priority // Ini kuncinya agar gambar langsung muncul tanpa delay
-              quality={80}
+              className="object-cover transition-opacity duration-500 opacity-0"
+              onLoadingComplete={(image) => image.classList.remove("opacity-0")}
+              priority
             />
 
             {/* Overlay */}
