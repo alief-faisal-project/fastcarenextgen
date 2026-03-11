@@ -398,13 +398,6 @@ useEffect(() => {
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm text-muted-foreground">
-                        Username
-                      </label>
-                      <p className="font-medium text-foreground">
-                        {currentUser?.username}
-                      </p>
-                    </div>
                     <div>
                       <label className="text-sm text-muted-foreground">
                         Role
