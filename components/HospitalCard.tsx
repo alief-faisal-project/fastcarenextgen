@@ -12,6 +12,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
   return (
     <Link
       href={`/hospital/${hospital.id}`}
+      prefetch={true}
       className="
         block
         bg-card
