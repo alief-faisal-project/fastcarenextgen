@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { spawn } from "child_process";
@@ -196,10 +197,11 @@ const HeroBanner = () => {
                       className="flex-shrink-0 w-[calc(33.333%-11px)] rounded-3xl overflow-hidden relative"
                     >
                       <div className="aspect-[2/1] relative">
-                        <img
+                        <Image
                           src={banner.image}
                           alt={banner.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       </div>
                     </a>
@@ -258,10 +260,11 @@ const HeroBanner = () => {
                   className="flex-shrink-0 w-[calc(50%-6px)] rounded-3xl overflow-hidden"
                 >
                   <div className="aspect-[2/1] relative">
-                    <img
+                    <Image
                       src={banner.image}
                       alt={banner.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 " />
                   </div>

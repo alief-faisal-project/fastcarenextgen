@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
 import HospitalCard from "./HospitalCard";

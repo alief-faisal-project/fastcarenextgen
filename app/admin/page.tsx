@@ -216,10 +216,12 @@ useEffect(() => {
                           >
                             <td className="px-4 py-3">
                               <div className="flex items-center space-x-3">
-                                <img
+                                <Image
                                   src={hospital.image}
                                   alt={hospital.name}
-                                  className="w-12 h-12 rounded-lg object-cover"
+                                  width={48}
+                                  height={48}
+                                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg object-cover"
                                 />
                                 <div>
                                   <p className="font-medium text-foreground">
@@ -317,10 +319,12 @@ useEffect(() => {
                     >
                       <div className="aspect-video relative bg-gray-300">
                         {banner.image ? (
-                          <img
+                          <Image
                             src={banner.image}
                             alt={banner.title}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="100vw"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-gray-400">
@@ -853,10 +857,11 @@ const HospitalFormModal = ({
               {/* Preview */}
               {imagePreview && (
                 <div className="mb-3 relative w-full h-40 bg-muted rounded-lg overflow-hidden">
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Preview"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               )}
@@ -1145,10 +1150,11 @@ const BannerFormModal = ({ banner, onClose, onSave }: BannerFormModalProps) => {
             {/* Preview */}
             {imagePreview && (
               <div className="relative w-full h-40 bg-muted rounded-lg overflow-hidden">
-                <img
+                <Image
                   src={imagePreview}
                   alt="Preview"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
             )}

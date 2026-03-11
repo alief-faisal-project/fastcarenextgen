@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Hospital } from "@/types";
 
@@ -23,11 +24,12 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
     >
       {/* Image */}
       <div className="relative aspect-[16/10] overflow-hidden flex-shrink-0">
-        <img
+        <Image
           src={hospital.image}
           alt={hospital.name}
-          loading="lazy"
-          className="w-full h-full object-cover"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
         />
 
         {/* Distance Badge */}
