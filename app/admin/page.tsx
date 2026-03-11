@@ -398,7 +398,6 @@ useEffect(() => {
                       </p>
                     </div>
                     <div>
-                    <div>
                       <label className="text-sm text-muted-foreground">
                         Role
                       </label>
@@ -1050,9 +1049,9 @@ const BannerFormModal = ({ banner, onClose, onSave }: BannerFormModalProps) => {
 
       setFormData({ ...formData, image: imageUrl });
       setImagePreview(imageUrl);
-      console.log("✅ Image uploaded successfully:", imageUrl);
+      console.log(" Image uploaded successfully:", imageUrl);
     } catch (error) {
-      console.error("❌ Upload failed:", error);
+      console.error(" Upload failed:", error);
       alert(
         "Gagal upload gambar: " +
           (error instanceof Error ? error.message : "Error"),
