@@ -1,0 +1,314 @@
+"use client";
+
+import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
+import { useApp } from "@/context/AppContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { BANTEN_CITIES, BantenCity } from "@/types";
+import { toast } from "sonner";
+
+const Navbar = () => {
+  const {
+    selectedCity,
+    setSelectedCity,
+    detectLocation,
+    isAuthenticated,
+    logout,
+    searchQuery,
+    setSearchQuery,
+  } = useApp();
+
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
+
+  const locationRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  // ===============================
+  // STATE UNTUK DETEKSI SCROLL
+  // ===============================
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        locationRef.current &&
+        !locationRef.current.contains(event.target as Node)
+      ) {
+        setIsLocationOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+
+  // DETEKSI POSISI SCROLL HALAMAN
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 120);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleDetectLocation = async () => {
+    setIsDetecting(true);
+
+    try {
+      await detectLocation();
+      toast.success("Lokasi Terdeteksi");
+      setIsLocationOpen(false);
+    } catch (error) {
+      console.error("Failed to detect location", error);
+
+      toast.error(
+        error instanceof Error && error.message === "Permission denied"
+          ? "Izin lokasi ditolak. Aktifkan izin lokasi di pengaturan browser."
+          : "Gagal mendeteksi lokasi. Coba lagi.",
+      );
+    } finally {
+      setIsDetecting(false);
+    }
+  };
+
+  const handleCitySelect = (city: BantenCity | "Semua") => {
+    setSelectedCity(city);
+    setIsLocationOpen(false);
+  };
+
+  return (
+    <nav className="navbar-sticky rounded-b-3xl border border-3xl">
+      <div className="container mx-auto px-4 ">
+        <div className="flex items-center justify-between h-14 md:h-18">
+          {/* Logo */}
+          <div
+            className="flex-shrink-0 mr-6 cursor-pointer"
+            onClick={() => {
+              if (isScrolled) {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: "smooth",
+                });
+              } else {
+                router.push("/");
+              }
+            }}
+          >
+            <Image
+              src="/fastcare-logo.webp"
+              alt="FastCare.id"
+              width={160}
+              height={80}
+              className="h-14 md:h-20 w-auto object-contain"
+              priority
+            />
+          </div>
+
+          {/* Desktop: Location & Search */}
+          <div className="hidden md:flex items-center gap-4 flex-1 max-w-3xl mx-6">
+            {/* Location Dropdown */}
+            <div className="relative" ref={locationRef}>
+              <button
+                onClick={() => setIsLocationOpen(!isLocationOpen)}
+                className="flex items-center space-x-2 px-4 py-3 rounded-xl border border-border hover:border-primary/50 transition-colors bg-card min-w-[200px]"
+              >
+                <i className="fa-solid fa-location-arrow text-primary" />
+
+                <span className="text-sm text-foreground truncate flex-1 text-left">
+                  {selectedCity === "Lokasi Terdekat"
+                    ? "Lokasi Terdekat"
+                    : selectedCity === "Semua"
+                      ? "Semua Wilayah"
+                      : selectedCity}
+                </span>
+
+                <i
+                  className={`fa-solid fa-chevron-down text-primary text-muted-foreground transition-transform duration-700 ${
+                    isLocationOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown */}
+              {isLocationOpen && (
+                <div className="absolute top-full left-0 mt-3 bg-card rounded-xl border border-border shadow-lg z-50 py-2 animate-scale-in">
+                  {/* Detect Location */}
+                  <button
+                    onClick={handleDetectLocation}
+                    disabled={isDetecting}
+                    className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-accent transition-colors text-left"
+                  >
+                    <i
+                      className={`fa-solid ${
+                        isDetecting ? "fa-spinner fa-spin" : "fa-street-view"
+                      } text-primary w-5`}
+                    />
+
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        Lokasi Terdekat
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Deteksi lokasi perangkat
+                      </p>
+                    </div>
+                  </button>
+
+                  <div className="border-t border-border my-2" />
+
+                  {/* All */}
+                  <button
+                    onClick={() => handleCitySelect("Semua")}
+                    className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${
+                      selectedCity === "Semua" ? "bg-accent" : ""
+                    }`}
+                  >
+                    <span className="text-sm text-foreground">
+                      Semua Wilayah
+                    </span>
+                  </button>
+
+                  <div className="border-t border-border my-2" />
+
+                  {/* Cities */}
+                  <div className="max-h-60 overflow-y-auto">
+                    {BANTEN_CITIES.map((city) => (
+                      <button
+                        key={city}
+                        onClick={() => handleCitySelect(city)}
+                        className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${
+                          selectedCity === city ? "bg-accent" : ""
+                        }`}
+                      >
+                        <span className="text-sm text-foreground">{city}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Search */}
+            <div className="flex-1 relative">
+              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+
+              <input
+                type="text"
+                placeholder="Cari pertolongan medis terdekat..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-border focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Desktop Auth */}
+          <div className="hidden md:flex items-center space-x-3">
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/admin"
+                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  <i className="fa-solid fa-sliders"></i>
+                  <span>Dashboard</span>
+                </Link>
+
+                <button
+                  onClick={() => {
+                    logout();
+                    router.push("/");
+                  }}
+                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <i className="fa-solid fa-right-from-bracket" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                <i className="fa-regular fa-user"></i>
+                <span>Login</span>
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 relative w-10 h-10 flex items-center justify-center"
+          >
+            <div className="relative w-6 h-4">
+              <span
+                className={`absolute w-full h-1 bg-foreground rounded transition-all duration-300 ease-in-out ${
+                  isMobileMenuOpen ? "rotate-45 top-1.5" : "top-0"
+                }`}
+              />
+
+              <span
+                className={`absolute w-full h-1 bg-foreground rounded transition-all duration-300 ease-in-out ${
+                  isMobileMenuOpen ? "-rotate-45 top-1.5" : "top-3"
+                }`}
+              />
+            </div>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-border animate-[slideDown_0.45s_cubic-bezier(0.22,1,0.36,1)]">
+            <div className="pt-2">
+              {isAuthenticated ? (
+                <div className="space-y-2">
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-3 px-4 py-3 bg-primary text-primary-foreground rounded-lg"
+                  >
+                    <i className="fa-solid fa-sliders"></i>
+                    <span className="font-medium">Dashboard Admin</span>
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      logout();
+                      router.push("/");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center space-x-3 px-4 py-3 bg-secondary rounded-lg"
+                  >
+                    <i className="fa-solid fa-right-from-bracket" />
+                    <span className="font-medium">Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center space-x-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg font-medium"
+                >
+                  <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                  <span>Login</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
