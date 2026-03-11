@@ -119,25 +119,27 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
         {/* Quick Info */}
         <div
           className="
-          flex items-center gap-3
-          text-[10px]
-          text-muted-foreground
-          flex-shrink-0
-        "
+    flex items-center gap-2 sm:gap-3 
+    text-[10px] 
+    text-muted-foreground 
+    flex-shrink-0 
+    whitespace-nowrap 
+    overflow-hidden
+  "
         >
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 shrink-0">
             <i className="fa-solid fa-bed" />
             {hospital.totalBeds}+ Kamar
           </span>
 
           {hospital.hasICU && (
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 shrink-0">
               <i className="fa-solid fa-heart-pulse" />
               ICU
             </span>
           )}
 
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 shrink-0">
             Kelas {hospital.class}
           </span>
         </div>

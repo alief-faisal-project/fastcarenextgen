@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LoadingScreen from "./LoadingScreen";
 
 export default function LoadingWrapper({
@@ -8,22 +8,34 @@ export default function LoadingWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [shouldHide, setShouldHide] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
-  const handleComplete = () => {
-    setIsLoaded(true);
-    // Hapus LoadingScreen dari DOM setelah animasi fade selesai
-    setTimeout(() => setShouldHide(true), 500);
-  };
+  useEffect(() => {
+    // Simulasi pengambilan data API nyata (misal: config, user profile, dll)
+    const fetchData = async () => {
+      try {
+        // Contoh: await fetch('/api/config');
+        // Atau: await Promise.all([data1, data2]);
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulasi network delay
+        setIsReady(true);
+      } catch (error) {
+        console.error("Gagal memuat data:", error);
+        setIsReady(true); // Tetap masuk agar user tidak terjebak di loading screen
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
-      {!shouldHide && <LoadingScreen onLoadComplete={handleComplete} />}
-
-      {/* Gunakan opacity agar konten sudah ter-render di latar belakang */}
+      {!isReady && <LoadingScreen />}
       <div
-        className={`transition-opacity duration-500 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+        className={
+          !isReady
+            ? "opacity-0 hidden"
+            : "opacity-100 transition-opacity duration-500"
+        }
       >
         {children}
       </div>
