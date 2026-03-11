@@ -31,6 +31,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  themeColor: "#0b1f3a", 
 };
 
 /* ============================= */
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
     title: "FastCare - Hospital Finder",
     description:
       "Temukan rumah sakit, klinik, dan layanan kesehatan terdekat dengan FastCare.",
-    url: "https://fastcare.id",
+    url: "https://fastcare-banten.vercel.app/",
     siteName: "FastCare",
     locale: "id_ID",
     type: "website",
