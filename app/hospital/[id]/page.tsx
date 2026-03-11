@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useMemo } from "react";
 import { sanitizeInput } from "@/lib/security";
 import { useApp } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
@@ -10,9 +11,13 @@ import Navbar from "@/components/Navbar";
 const HospitalDetail = () => {
   const params = useParams();
   const { getHospitalById } = useApp();
-  const id = params?.id as string;
 
-  const hospital = getHospitalById(id || "");
+  const id = useMemo(() => params?.id as string, [params]);
+
+  const hospital = useMemo(() => {
+    if (!id) return null;
+    return getHospitalById(id);
+  }, [id, getHospitalById]);
 
   if (!hospital) {
     return (
@@ -83,11 +88,8 @@ const HospitalDetail = () => {
                   src={hospital.image}
                   alt={hospital.name}
                   fill
-                  className="object-cover transition-opacity duration-500 opacity-0"
-                  onLoadingComplete={(image) =>
-                    image.classList.remove("opacity-0")
-                  }
-                  priority
+                  sizes="(max-width:1024px) 100vw, 66vw"
+                  className="object-cover"
                 />
 
                 {/* Overlay */}
@@ -196,7 +198,7 @@ const HospitalDetail = () => {
                   className="w-full h-14 flex items-center justify-center gap-3
                rounded-3xl bg-secondary
                text-primary text-sm font-medium
-               transition-colors C hover:bg-secondary/60 border"
+               transition-colors hover:bg-secondary/60 border"
                 >
                   <i className="fa-solid fa-phone-volume w-5 text-base text-center" />
                   <span className="text-center leading-none">Telepon</span>
@@ -210,7 +212,7 @@ const HospitalDetail = () => {
                   className="w-full h-14 flex items-center justify-center gap-3
   rounded-3xl bg-secondary
                text-primary text-sm font-medium
-               transition-colors C hover:bg-secondary/60 border"
+               transition-colors hover:bg-secondary/60 border"
                 >
                   <i className="fa-solid fa-location-arrow w-5 text-base text-center" />
                   <span className="text-center leading-none">Peta Lokasi</span>
@@ -245,9 +247,8 @@ const HospitalDetail = () => {
               src={hospital.image}
               alt={hospital.name}
               fill
-              className="object-cover transition-opacity duration-500 opacity-0"
-              onLoadingComplete={(image) => image.classList.remove("opacity-0")}
-              priority
+              sizes="100vw"
+              className="object-cover"
             />
 
             {/* Overlay */}
@@ -283,7 +284,7 @@ const HospitalDetail = () => {
                 className="flex-1 h-12 flex items-center justify-center gap-2 
                rounded-3xl bg-secondary
                text-primary text-sm font-medium
-               transition-colors C hover:bg-secondary/60"
+               transition-colors  hover:bg-secondary/60"
               >
                 <i className="fa-solid fa-location-arrow text-base" />
                 <span className="text-center leading-none">Peta</span>
@@ -360,7 +361,7 @@ const HospitalDetail = () => {
                     {getOwnership()}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-">
+                <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-muted-foreground">
                     IGD 24 Jam
                   </span>

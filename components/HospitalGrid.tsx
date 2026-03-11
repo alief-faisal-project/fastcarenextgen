@@ -9,7 +9,7 @@ const HospitalGrid = () => {
   const { hospitals, selectedCity, searchQuery, userLocation } = useApp();
 
   // State untuk menampilkan tooltip otomatis 3 detik
-  const [showAutoTooltip, setShowAutoTooltip] = useState<boolean>(false);
+  const [showAutoTooltip, setShowAutoTooltip] = useState(false);
 
   const filteredHospitals = useMemo(() => {
     let result = [...hospitals];
