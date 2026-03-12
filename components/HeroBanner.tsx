@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
+import { spawn } from "child_process";
+
 const emergencyServices = [
   { icon: "fa-solid fa-truck-medical", label: "Ambulan", number: "119" },
   {
@@ -248,7 +250,7 @@ const HeroBanner = () => {
           <div className="md:hidden px-4">
             <div
               ref={mobileRef}
-              className="flex gap-3 overflow-x-auto scrollbar-hide will-change-transform"
+              className="flex gap-3 overflow-x-auto scrollbar-hide"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {activeBanners.map((banner) => (
@@ -262,7 +264,6 @@ const HeroBanner = () => {
                       src={banner.image}
                       alt={banner.title}
                       fill
-                      priority={false}
                       className="object-cover"
                     />
                     <div className="absolute inset-0 " />
