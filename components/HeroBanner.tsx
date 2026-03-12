@@ -250,8 +250,12 @@ const HeroBanner = () => {
           <div className="md:hidden px-4">
             <div
               ref={mobileRef}
-              className="flex gap-3 overflow-x-auto scrollbar-hide"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              className="flex gap-3 overflow-x-auto scrollbar-hide touch-pan-x"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                WebkitOverflowScrolling: "touch",
+              }}
             >
               {activeBanners.map((banner) => (
                 <a
