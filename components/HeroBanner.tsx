@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import { spawn } from "child_process";
-
 const emergencyServices = [
   { icon: "fa-solid fa-truck-medical", label: "Ambulan", number: "119" },
   {
