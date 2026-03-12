@@ -50,7 +50,6 @@ const HeroBanner = () => {
   const { heroBanners } = useApp();
 
   // ================= STATE =================
-  // Menyimpan index slide aktif
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // ================= REF =================
@@ -65,30 +64,26 @@ const HeroBanner = () => {
   const isDraggingRef = useRef<boolean>(false);
 
   // ================= FILTER BANNER =================
-  // Ambil banner aktif lalu urutkan berdasarkan order
   const activeBanners = heroBanners
     .filter((b) => b.isActive)
     .sort((a, b) => a.order - b.order);
 
   // ================= DESKTOP LOGIC =================
 
-  // Hitung maksimal slide desktop (karena tampil 3 banner)
   const maxDesktopSlide =
     activeBanners.length > 3 ? activeBanners.length - 3 : 0;
 
-  // Pindah ke slide sebelumnya
   const goToPrevious = () => {
     if (currentSlide === 0) return;
     setCurrentSlide((prev) => prev - 1);
   };
 
-  // Pindah ke slide berikutnya
   const goToNext = () => {
     if (currentSlide >= maxDesktopSlide) return;
     setCurrentSlide((prev) => prev + 1);
   };
 
-  // DRAG DESKTOP
+  // ================= DRAG DESKTOP =================
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     isDraggingRef.current = true;
@@ -106,7 +101,7 @@ const HeroBanner = () => {
     isDraggingRef.current = false;
 
     const delta = dragDeltaRef.current;
-    const threshold = 40; 
+    const threshold = 40;
 
     if (delta > threshold) {
       goToPrevious();
@@ -118,33 +113,31 @@ const HeroBanner = () => {
     dragDeltaRef.current = 0;
   };
 
-  // MOBILE INDICATOR  
+  // ================= MOBILE INDICATOR (IMPROVED) =================
 
   useEffect(() => {
     const container = mobileRef.current;
     const indicator = indicatorRef.current;
     if (!container || !indicator) return;
 
-    let ticking = false;
-
-const updateIndicator = () => {
-  const maxScroll = container.scrollWidth - container.clientWidth;
-  const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
-
-  const trackWidth = indicator.parentElement?.clientWidth || 0;
-  const dotWidth = indicator.clientWidth;
-
-  const maxTranslate = trackWidth - dotWidth;
-
-  indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
-  ticking = false;
-};
-
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateIndicator);
-        ticking = true;
-      }
+      const card = container.firstElementChild as HTMLElement;
+      if (!card) return;
+
+      const gap = 12;
+      const slideWidth = card.clientWidth + gap;
+
+      const index = Math.round(container.scrollLeft / slideWidth);
+
+      const trackWidth = indicator.parentElement?.clientWidth || 0;
+      const dotWidth = indicator.clientWidth;
+
+      const maxTranslate = trackWidth - dotWidth;
+      const maxSlide = activeBanners.length - 1;
+
+      const progress = maxSlide > 0 ? index / maxSlide : 0;
+
+      indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
@@ -152,7 +145,7 @@ const updateIndicator = () => {
     return () => {
       container.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [activeBanners.length]);
 
   // ================= DESKTOP INDICATOR =================
 
@@ -162,9 +155,9 @@ const updateIndicator = () => {
 
     const progress = maxDesktopSlide > 0 ? currentSlide / maxDesktopSlide : 0;
 
-    const trackWidth = 64; // w-16
-    const dotWidth = 28; // w-7
-    const maxTranslate = trackWidth - dotWidth; // 36px
+    const trackWidth = 64;
+    const dotWidth = 28;
+    const maxTranslate = trackWidth - dotWidth;
 
     indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
   }, [currentSlide, maxDesktopSlide]);
@@ -175,11 +168,8 @@ const updateIndicator = () => {
         {/* ================= DESKTOP ================= */}
         {activeBanners.length > 0 && (
           <div className="hidden md:block container mx-auto px-4">
-            {/* Wrapper utama desktop */}
             <div className="relative">
-              {/* Wrapper banner agar arrow benar-benar di tengah */}
               <div className="relative overflow-hidden">
-                {/* Track banner */}
                 <div
                   ref={desktopTrackRef}
                   onPointerDown={onPointerDown}
@@ -209,7 +199,6 @@ const updateIndicator = () => {
                   ))}
                 </div>
 
-                {/* Arrow navigation desktop */}
                 {activeBanners.length > 3 && (
                   <>
                     <button
@@ -231,7 +220,6 @@ const updateIndicator = () => {
                 )}
               </div>
 
-              {/* Indicator arrow desktop  */}
               {activeBanners.length > 1 && (
                 <div className="flex items-center justify-center mt-4">
                   <div className="relative w-16 h-5 rounded-full bg-muted-foreground/20 overflow-hidden">
@@ -246,19 +234,19 @@ const updateIndicator = () => {
           </div>
         )}
 
-        {/* Mobile Section */}
+        {/* ================= MOBILE ================= */}
         {activeBanners.length > 0 && (
           <div className="md:hidden px-4">
             <div
               ref={mobileRef}
-              className="flex gap-3 overflow-x-auto scrollbar-hide"
+              className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {activeBanners.map((banner) => (
                 <a
                   key={banner.id}
                   href={banner.link || "#"}
-                  className="flex-shrink-0 w-[calc(50%-6px)] rounded-3xl overflow-hidden"
+                  className="flex-shrink-0 w-[calc(50%-6px)] rounded-3xl overflow-hidden snap-start"
                 >
                   <div className="aspect-[2/1] relative">
                     <Image
@@ -290,13 +278,12 @@ const updateIndicator = () => {
       {/* ================= EMERGENCY SERVICES ================= */}
 
       <div className="container mx-auto px-4 mt-4">
-        {/* Desktop emergency */}
         <div className="hidden md:flex items-start justify-center gap-6 w-full max-w-4xl mx-auto">
           {emergencyServices.map((service, index) => (
             <div key={index} className="flex flex-col items-center gap-2">
               <a
                 href={`tel:${service.number.replace(/\s/g, "")}`}
-                className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border  rounded-2xl w-24"
+                className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border rounded-2xl w-24"
               >
                 <i className={`${service.icon} text-primary text-lg`} />
                 <span className="text-xs font-bold text-primary text-center">
@@ -310,7 +297,6 @@ const updateIndicator = () => {
           ))}
         </div>
 
-        {/* Mobile emergency */}
         <div
           className="md:hidden flex gap-3 overflow-x-auto scrollbar-hide"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -325,7 +311,6 @@ const updateIndicator = () => {
                 className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border rounded-3xl min-w-[100px]"
               >
                 <i className={`${service.icon} text-primary text-xl`} />
-
                 <span className="text-[10px] font-bold text-primary text-center">
                   {service.number}
                 </span>
