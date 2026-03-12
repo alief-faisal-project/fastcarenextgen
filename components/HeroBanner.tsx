@@ -120,41 +120,41 @@ const HeroBanner = () => {
 
   // MOBILE INDICATOR  
 
-useEffect(() => {
-  const container = mobileRef.current;
-  const indicator = indicatorRef.current;
-  if (!container || !indicator) return;
+  useEffect(() => {
+    const container = mobileRef.current;
+    const indicator = indicatorRef.current;
+    if (!container || !indicator) return;
 
-  let ticking = false;
+    let ticking = false;
 
-  const updateIndicator = () => {
-    const maxScroll = container.scrollWidth - container.clientWidth;
-    const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
+    const updateIndicator = () => {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
 
-    const trackWidth = 64;
-    const dotWidth = 16;
-    const maxTranslate = trackWidth - dotWidth;
+      const trackWidth = 64;
+      const dotWidth = 16;
+      const maxTranslate = trackWidth - dotWidth;
 
-    indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
-    ticking = false;
-  };
+      indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
+      ticking = false;
+    };
 
-  const handleScroll = () => {
-    if (!ticking) {
-      requestAnimationFrame(updateIndicator);
-      ticking = true;
-    }
-  };
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateIndicator);
+        ticking = true;
+      }
+    };
 
-  container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener("scroll", handleScroll, { passive: true });
 
-  // update sekali setelah render
-  requestAnimationFrame(updateIndicator);
+    // update sekali setelah render
+    requestAnimationFrame(updateIndicator);
 
-  return () => {
-    container.removeEventListener("scroll", handleScroll);
-  };
-}, [activeBanners.length]);
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [activeBanners.length]);
 
   // ================= DESKTOP INDICATOR =================
 
@@ -253,12 +253,8 @@ useEffect(() => {
           <div className="md:hidden px-4">
             <div
               ref={mobileRef}
-              className="flex gap-3 overflow-x-auto scrollbar-hide touch-pan-x"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                WebkitOverflowScrolling: "touch",
-              }}
+              className="flex gap-3 overflow-x-auto scrollbar-hide"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {activeBanners.map((banner) => (
                 <a
