@@ -106,7 +106,7 @@ const HeroBanner = () => {
     isDraggingRef.current = false;
 
     const delta = dragDeltaRef.current;
-    const threshold = 40; 
+    const threshold = 40;
 
     if (delta > threshold) {
       goToPrevious();
@@ -118,7 +118,7 @@ const HeroBanner = () => {
     dragDeltaRef.current = 0;
   };
 
-  // MOBILE INDICATOR  
+  // MOBILE INDICATOR
 
   useEffect(() => {
     const container = mobileRef.current;
@@ -197,11 +197,10 @@ const HeroBanner = () => {
                       className="flex-shrink-0 w-[calc(33.333%-11px)] rounded-3xl overflow-hidden relative"
                     >
                       <div className="aspect-[2/1] relative">
-                        <Image
+                        <img
                           src={banner.image}
                           alt={banner.title}
-                          fill
-                          className="object-cover"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                     </a>
@@ -260,11 +259,10 @@ const HeroBanner = () => {
                   className="flex-shrink-0 w-[calc(50%-6px)] rounded-3xl overflow-hidden"
                 >
                   <div className="aspect-[2/1] relative">
-                    <Image
+                    <img
                       src={banner.image}
                       alt={banner.title}
-                      fill
-                      className="object-cover"
+                      className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 " />
                   </div>
