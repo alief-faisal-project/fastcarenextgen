@@ -151,7 +151,7 @@ const HeroBanner = () => {
     return () => {
       container.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [activeBanners.length]);
 
   // ================= DESKTOP INDICATOR =================
 
