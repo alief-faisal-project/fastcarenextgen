@@ -248,7 +248,7 @@ const HeroBanner = () => {
           <div className="md:hidden px-4">
             <div
               ref={mobileRef}
-              className="flex gap-3 overflow-x-auto scrollbar-hide"
+              className="flex gap-3 overflow-x-auto scrollbar-hide will-change-transform"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {activeBanners.map((banner) => (
@@ -262,6 +262,7 @@ const HeroBanner = () => {
                       src={banner.image}
                       alt={banner.title}
                       fill
+                      priority={false}
                       className="object-cover"
                     />
                     <div className="absolute inset-0 " />
