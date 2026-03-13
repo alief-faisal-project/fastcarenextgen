@@ -100,9 +100,8 @@ const Footer = () => {
               />
 
               <p className="text-sm text-gray-300 leading-relaxed">
-                Platform untuk membantu masyarakat menemukan fasilitas kesehatan
-                dengan cepat dan praktis. Informasi rumah sakit, layanan
-                darurat, dan lokasi tersedia dalam satu tempat.
+                Platform untuk membantu  menemukan fasilitas kesehatan terdekat dari lokasi anda
+                dengan cepat dan praktis
               </p>
             </div>
 
@@ -111,19 +110,19 @@ const Footer = () => {
               <h3 className="text-sm font-semibold uppercase tracking-wider">
                 Bantuan
                 <div className="w-10 h-0.5 bg-yellow-400 mt-1" />{" "}
-                {/* Garis Kuning */}
+                {/* GARIS BAWAH */}
               </h3>
 
               <button
                 onClick={() => openDialog("menu")}
-                className="text-sm hover:text-gray-200 cursor-pointer"
+                className="text-sm hover:text-yellow-400 cursor-pointer"
               >
                 Hubungi Kami
               </button>
 
               <button
                 onClick={() => openDialog("dukung")}
-                className="text-sm  hover:text-gray-200 cursor-pointer"
+                className="text-sm  hover:text-yellow-400 cursor-pointer"
               >
                 Dukung Pengembangan
               </button>
@@ -141,7 +140,7 @@ const Footer = () => {
                 <i className="fa-solid fa-envelope text-white" />
                 <a
                   href="mailto:info@fastcare.id"
-                  className="text-sm hover:text-gray-200 cursor-pointer"
+                  className="text-sm hover:text-yellow-400 cursor-pointer"
                 >
                   info@fastcare.id
                 </a>
@@ -153,7 +152,7 @@ const Footer = () => {
                   href="https://wa.me/6283120996468"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm hover:text-gray-200 cursor-pointer"
+                  className="text-sm hover:text-yellow-400 cursor-pointer"
                 >
                   +62 831-2099-6468
                 </a>
@@ -164,7 +163,7 @@ const Footer = () => {
 
         {/* FOOTER PALING BAWAH */}
         <div className="bg-[#161616] ">
-          <div className="relative w-full px-20 py-2 flex items-center justify-center text-xs text-gray-400">
+          <div className="relative w-full px-20 py-2 flex items-center justify-center text-xs text-white">
             <span className="absolute left-0 pl-8 ">
               © {new Date().getFullYear()} FastCare. Semua hak dilindungi.
             </span>
@@ -172,7 +171,7 @@ const Footer = () => {
               href="https://sirs.kemkes.go.id"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white pl-280 "
+              className="text-white hover:text-yellow-400 "
             >
               Sumber Data: SIRS Kemkes RI
             </a>
@@ -232,7 +231,7 @@ const Footer = () => {
             ) : (
               <div className="space-y-4">
                 <p className="text-[15px] text-justify">
-                  Website ini sepenuhnya gratis dan dibuat untuk membantu
+                  Platform ini sepenuhnya gratis dan dibuat untuk membantu
                   masyarakat menemukan fasilitas kesehatan dengan cepat dan
                   praktis. Informasi rumah sakit, layanan darurat, dan lokasi
                   tersedia dalam satu tempat.
@@ -283,7 +282,7 @@ const Footer = () => {
                     <div className="space-y-1 pr-4 border-r border-border">
                       <p className="text-xs text-gray-600 flex justify-between">
                         <span>1. Hamba Allah</span>
-                        <span className="font-medium text-primary">
+                        <span className="font-medium text-red-500">
                           Rp.100k
                         </span>
                       </p>
