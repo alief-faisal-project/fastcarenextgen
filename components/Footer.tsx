@@ -84,7 +84,7 @@ const Footer = () => {
 
       <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-8 py-10">
-          <div className="grid grid-cols-3 divide-x divide-gray-700">
+          <div className="grid grid-cols-3 divide-x divide-white">
             {/* BRAND */}
             <div className="pr-10 space-y-4">
               <Image
