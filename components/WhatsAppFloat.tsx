@@ -20,18 +20,18 @@ export default function WhatsAppFloat() {
         href="https://wa.me/6281234567890"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center bg-[#25D366] hover:bg-[#1ebe5d] 
+        className="flex items-center bg-green-600 hover:bg-green-600 
                    text-white rounded-tr-lg shadow-xl overflow-hidden
                    transition-all duration-300"
       >
         {/* Text */}
-        <span className="px-4 py-3 text-sm font-medium whitespace-nowrap">
+        <span className="px-3 py-2 text-sm font-medium whitespace-nowrap">
           Butuh Bantuan? Hubungi Kami!
         </span>
 
         {/* Icon area */}
-        <div className="flex items-center justify-center bg-[#1ebe5d] px-4 py-3">
-          <FontAwesomeIcon icon={faWhatsapp} className="text-white text-xl" />
+        <div className="flex items-center justify-center bg-green-500 w-12 h-10 ">
+          <FontAwesomeIcon icon={faWhatsapp} className="text-white text-2xl" />
         </div>
       </a>
     </div>

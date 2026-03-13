@@ -24,7 +24,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
       "
     >
       {/* Image */}
-      <div className="relative aspect-[16/10] overflow-hidden flex-shrink-0">
+      <div className="relative aspect-[16/10] overflow-hidden flex-shrink-0 ">
         <Image
           src={hospital.image}
           alt={hospital.name}

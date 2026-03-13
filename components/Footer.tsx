@@ -19,6 +19,12 @@ const Footer = () => {
   const noRek = "1961828503";
   const maskedRek = noRek.slice(0, -3) + "***";
 
+  // Fungsi untuk membuka dialog dengan menentukan view target
+  const openDialog = (targetView: ViewType) => {
+    setView(targetView);
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     if (!isOpen) {
       setView("menu");
@@ -35,7 +41,7 @@ const Footer = () => {
             {/* HUBUNGI KAMI */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setIsOpen(true)}
+                onClick={() => openDialog("menu")}
                 className="hover:text-gray-200"
               >
                 Hubungi Kami
@@ -61,10 +67,9 @@ const Footer = () => {
       </footer>
 
       {/* TOP FOOTER DESKTOP */}
-
-      <section className="hidden md:block bg-blue-400 text-white">
+      <section className="hidden md:block bg-blue-950 text-white mt-16">
         <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
-          <div className="text-5xl text-blue-200">
+          <div className="text-5xl text-blue-100">
             <i className="fa-regular fa-comments" />
           </div>
 
@@ -81,7 +86,6 @@ const Footer = () => {
       </section>
 
       {/* DESKTOP FOOTER */}
-
       <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-8 py-10">
           <div className="grid grid-cols-3 divide-x divide-white">
@@ -103,32 +107,41 @@ const Footer = () => {
             </div>
 
             {/* BANTUAN */}
-
-            <div className="px-10 space-y-4">
+            <div className="px-10 flex flex-col items-start space-y-4">
               <h3 className="text-sm font-semibold uppercase tracking-wider">
                 Bantuan
+                <div className="w-10 h-0.5 bg-yellow-400 mt-1" />{" "}
+                {/* Garis Kuning */}
               </h3>
 
               <button
-                onClick={() => setIsOpen(true)}
-                className="text-sm hover:text-gray-200"
+                onClick={() => openDialog("menu")}
+                className="text-sm hover:text-gray-200 cursor-pointer"
               >
-                Hubungi Kami{" "}
+                Hubungi Kami
+              </button>
+
+              <button
+                onClick={() => openDialog("dukung")}
+                className="text-sm  hover:text-gray-200 cursor-pointer"
+              >
+                Dukung Pengembangan
               </button>
             </div>
 
             {/* KONTAK */}
-
             <div className="pl-10 space-y-4">
               <h3 className="text-sm font-semibold uppercase tracking-wider">
                 Kontak
+                <div className="w-10 h-0.5 bg-yellow-400 mt-1" />{" "}
+                {/* Garis Kuning */}
               </h3>
 
               <div className="flex items-center gap-3">
                 <i className="fa-solid fa-envelope text-white" />
                 <a
                   href="mailto:info@fastcare.id"
-                  className="text-sm hover:text-gray-200"
+                  className="text-sm hover:text-gray-200 cursor-pointer"
                 >
                   info@fastcare.id
                 </a>
@@ -137,12 +150,12 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <i className="fa-brands fa-whatsapp text-white" />
                 <a
-                  href="https://wa.me/6285692985927"
+                  href="https://wa.me/6283120996468"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm hover:text-gray-200"
+                  className="text-sm hover:text-gray-200 cursor-pointer"
                 >
-                  +62 856-9298-5927
+                  +62 831-2099-6468
                 </a>
               </div>
             </div>
@@ -152,13 +165,9 @@ const Footer = () => {
         {/* FOOTER PALING BAWAH */}
         <div className="bg-[#161616] ">
           <div className="relative w-full px-20 py-2 flex items-center justify-center text-xs text-gray-400">
-            {/* COPYRIGHT kiri layar */}
             <span className="absolute left-0 pl-8 ">
               © {new Date().getFullYear()} FastCare. Semua hak dilindungi.
             </span>
-
-            {/* SUMBER DATA tetap di tengah */}
-
             <a
               href="https://sirs.kemkes.go.id"
               target="_blank"
@@ -172,13 +181,14 @@ const Footer = () => {
       </footer>
 
       {/* DIALOG BANTUAN */}
-
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <i className="fa-solid fa-headset text-primary" />
-              {view === "menu" ? "Butuh Bantuan?" : "Ingin Berkontribusi?"}
+              <i
+                className={`fa-solid ${view === "menu" ? "fa-headset" : "fa-qrcode"} text-primary`}
+              />
+              {view === "menu" ? "Butuh Bantuan?" : "Dukung Pengembangan"}
             </DialogTitle>
           </DialogHeader>
 
@@ -218,27 +228,14 @@ const Footer = () => {
                     </p>
                   </div>
                 </a>
-
-                <button
-                  type="button"
-                  onClick={() => setView("dukung")}
-                  className="w-full text-left flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition"
-                >
-                  <i className="fa-solid fa-qrcode text-primary text-2xl" />
-                  <div>
-                    <p className="font-medium text-sm">Dukung Pengembangan</p>
-                    <p className="text-xs text-muted-foreground">
-                      Donasi untuk mendukung platform
-                    </p>
-                  </div>
-                </button>
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-sm text-justify">
+                <p className="text-xs text-justify">
                   Website ini sepenuhnya gratis dan dibuat untuk membantu
                   masyarakat menemukan fasilitas kesehatan dengan cepat dan
-                  mudah.
+                  praktis. Informasi rumah sakit, layanan darurat, dan lokasi
+                  tersedia dalam satu tempat.
                 </p>
 
                 <div className="flex items-center gap-4">
@@ -254,28 +251,77 @@ const Footer = () => {
 
                   <div>
                     <p className="text-sm font-medium">Nomor Rekening</p>
-
                     <div className="flex items-center gap-2">
-                      <p className="text-lg font-bold text-red-500 tracking-wide">
+                      <p className="text-[14px] font-bold text-red-500 tracking-wide">
                         {showRek ? noRek : maskedRek}
                       </p>
-
                       <button
                         type="button"
                         onClick={() => setShowRek(!showRek)}
-                        className="text-xs"
+                        className="text-[12px]"
                       >
                         <i
-                          className={`fa-solid ${
-                            showRek ? "fa-eye-slash" : "fa-eye"
-                          }`}
-                        />{" "}
+                          className={`fa-solid ${showRek ? "fa-eye-slash" : "fa-eye"}`}
+                        />
                       </button>
                     </div>
-
                     <p className="text-xs text-muted-foreground">
                       a.n. ALIEF FAISAL ADRIANSYAH
                     </p>
+                  </div>
+                </div>
+
+                <hr className="border-t border-gray-200 my-4" />
+
+                <div className="space-y-3">
+                  <p className="text-[10px] font-semibold uppercase text-muted-foreground text-left">
+                    Kontributor dalam projek ini
+                  </p>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                    <div className="space-y-1">
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>1.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>2.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>3.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>4.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>5.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>6.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>7.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>8.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>9.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>10.</span>{" "}
+                        <span className="font-medium text-primary"></span>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
