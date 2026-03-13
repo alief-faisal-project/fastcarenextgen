@@ -67,16 +67,16 @@ const Footer = () => {
       </footer>
 
       {/* TOP FOOTER DESKTOP */}
-      <section className="hidden md:block bg-blue-950 text-white mt-16">
+      <section className="hidden md:block bg-blue-400 text-white mt-16">
         <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
-          <div className="text-5xl text-blue-100">
+          <div className="text-5xl text-white">
             <i className="fa-regular fa-comments" />
           </div>
 
           <div className="flex-1">
             <h3 className="text-lg font-semibold">Layanan Bantuan</h3>
 
-            <p className="text-sm text-blue-100">
+            <p className="text-sm text-white">
               Jika ada pertanyaan atau membutuhkan bantuan, atau ingin
               memberikan kritik dan saran silahkan hubungi kami melalui tombol
               hubungi kami dibawah.
@@ -231,7 +231,7 @@ const Footer = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-xs text-justify">
+                <p className="text-[15px] text-justify">
                   Website ini sepenuhnya gratis dan dibuat untuk membantu
                   masyarakat menemukan fasilitas kesehatan dengan cepat dan
                   praktis. Informasi rumah sakit, layanan darurat, dan lokasi
@@ -274,51 +274,60 @@ const Footer = () => {
                 <hr className="border-t border-gray-200 my-4" />
 
                 <div className="space-y-3">
-                  <p className="text-[10px] font-semibold uppercase text-muted-foreground text-left">
-                    Kontributor dalam projek ini
+                  <p className="text-[12px] font-semibold uppercase text-primary text-left">
+                    Kontributor :
                   </p>
+
                   <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                    <div className="space-y-1">
+                    {/* Kolom Kiri */}
+                    <div className="space-y-1 pr-4 border-r border-border">
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>1.</span>{" "}
+                        <span>1. Hamba Allah</span>
+                        <span className="font-medium text-primary">
+                          Rp.100k
+                        </span>
+                      </p>
+
+                      <p className="text-xs text-gray-600 flex justify-between">
+                        <span>2.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
+
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>2.</span>{" "}
+                        <span>3.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
+
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>3.</span>{" "}
+                        <span>4.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
+
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>4.</span>{" "}
-                        <span className="font-medium text-primary"></span>
-                      </p>
-                      <p className="text-xs text-gray-600 flex justify-between">
-                        <span>5.</span>{" "}
+                        <span>5.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
                     </div>
-                    <div className="space-y-1">
+
+                    {/* Kolom Kanan */}
+                    <div className="space-y-1 pl-4">
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>6.</span>{" "}
+                        <span>6.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
+
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>7.</span>{" "}
+                        <span>7.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
+
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>8.</span>{" "}
+                        <span>8.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
+
                       <p className="text-xs text-gray-600 flex justify-between">
-                        <span>9.</span>{" "}
-                        <span className="font-medium text-primary"></span>
-                      </p>
-                      <p className="text-xs text-gray-600 flex justify-between">
-                        <span>10.</span>{" "}
+                        <span>9.</span>
                         <span className="font-medium text-primary"></span>
                       </p>
                     </div>
