@@ -35,7 +35,7 @@ const Footer = () => {
   return (
     <>
       {/* MOBILE FOOTER */}
-      <footer className="relative md:hidden bg-primary mt-5 pt- pb-8 border-t border-white/5">
+      <footer className="relative md:hidden bg-primary mt-5 pt-0 pb-8 border-t border-white/5">
         <div className="container relative z-10 mx-auto px-6">
           <div className="flex flex-col items-center gap-8">
             {/* CTA UTAMA (DIATAS) */}
@@ -68,7 +68,7 @@ const Footer = () => {
                 href="https://sirs.kemkes.go.id"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+                className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[10px]"
               >
                 Sumber Data: SIRS Kemkes RI
               </a>
