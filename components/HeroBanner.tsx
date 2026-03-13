@@ -176,7 +176,7 @@ const HeroBanner = () => {
       <div className="relative">
         {/* ================= DESKTOP ================= */}
         {activeBanners.length > 0 && (
-          <div className="hidden md:block container mx-auto px-4">
+          <div className="hidden md:block container mx-auto px-4 mt-4">
             {/* Wrapper utama desktop */}
             <div className="relative">
               {/* Wrapper banner agar arrow benar-benar di tengah */}
