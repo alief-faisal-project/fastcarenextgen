@@ -151,19 +151,19 @@ const Footer = () => {
 
         {/* FOOTER PALING BAWAH */}
         <div className="bg-[#161616] ">
-          <div className="relative w-full px-8 py-2 flex items-center justify-center text-xs text-gray-400">
+          <div className="relative w-full px-20 py-2 flex items-center justify-center text-xs text-gray-400">
             {/* COPYRIGHT kiri layar */}
-            <span className="absolute left-0 pl-8">
+            <span className="absolute left-0 pl-8 ">
               © {new Date().getFullYear()} FastCare. Semua hak dilindungi.
             </span>
 
             {/* SUMBER DATA tetap di tengah */}
-            
+
             <a
               href="https://sirs.kemkes.go.id"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-200"
+              className="hover:text-white pl-280 "
             >
               Sumber Data: SIRS Kemkes RI
             </a>
