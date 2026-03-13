@@ -18,7 +18,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
         bg-card
         rounded-lg
         overflow-hidden
-        border border-border
+        border border-border shadow-sm
         h-full
         flex flex-col
       "
