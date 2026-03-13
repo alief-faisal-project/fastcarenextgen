@@ -59,6 +59,7 @@ const Footer = () => {
           </div>
         </div>
       </footer>
+
       {/* TOP FOOTER DESKTOP */}
 
       <section className="hidden md:block bg-blue-400 text-white">
@@ -89,7 +90,7 @@ const Footer = () => {
               <Image
                 src="/fastcare-logo-footer.webp"
                 alt="FastCare Logo"
-                width={140}
+                width={120}
                 height={40}
                 className="object-contain brightness-0 invert"
               />
@@ -104,13 +105,13 @@ const Footer = () => {
             {/* BANTUAN */}
 
             <div className="px-10 space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-yellow-500">
                 Bantuan
               </h3>
 
               <button
                 onClick={() => setIsOpen(true)}
-                className="text-sm hover:text-yellow-200"
+                className="text-sm hover:text-gray-200"
               >
                 Hubungi Kami{" "}
               </button>
@@ -119,51 +120,53 @@ const Footer = () => {
             {/* KONTAK */}
 
             <div className="pl-10 space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider">
+              <h3 className="text-sm font-semibold uppercase tracking-wider  text-yellow-500">
                 Kontak
               </h3>
 
               <div className="flex items-center gap-3">
-                <i className="fa-solid fa-envelope text-white" />
+                <i className="fa-solid fa-envelope text-yellow-500" />
                 <a
                   href="mailto:info@fastcare.id"
-                  className="text-sm hover:text-yellow-200"
+                  className="text-sm hover:text-gray-200"
                 >
                   info@fastcare.id
                 </a>
               </div>
 
               <div className="flex items-center gap-3">
-                <i className="fa-brands fa-whatsapp text-white" />
+                <i className="fa-brands fa-whatsapp text-yellow-500" />
                 <a
                   href="https://wa.me/6285692985927"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm hover:text-yellow-200"
+                  className="text-sm hover:text-gray-200"
                 >
                   +62 856-9298-5927
                 </a>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="border-t border-gray-700 mt-10 pt-6 text-sm text-white">
-            <div className="relative flex items-center justify-center">
-              {/* Copyright kiri */}
-              <span className="absolute left-0">
-                © 2026 FastCare. Semua hak dilindungi.
-              </span>
+        {/* FOOTER PALING BAWAH */}
+        <div className="bg-[#161616] ">
+          <div className="relative w-full px-8 py-4 flex items-center justify-center text-xs text-gray-400">
+            {/* COPYRIGHT kiri layar */}
+            <span className="absolute left-0 pl-8">
+              © {new Date().getFullYear()} FastCare. Semua hak dilindungi.
+            </span>
 
-              {/* Sumber data tengah */}
-              <a
-                href="https://sirs.kemkes.go.id"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-yellow-200"
-              >
-                Sumber Data: SIRS Kemkes RI
-              </a>
-            </div>
+            {/* SUMBER DATA tetap di tengah */}
+            
+            <a
+              href="https://sirs.kemkes.go.id"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-200"
+            >
+              Sumber Data: SIRS Kemkes RI
+            </a>
           </div>
         </div>
       </footer>
