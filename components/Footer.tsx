@@ -53,7 +53,7 @@ const Footer = () => {
       </section>
       {/* MOBILE FOOTER */}
 
-      <footer className="relative md:hidden bg-[#1f1f1f] pt-0 pb-8 border-t border-white/5">
+      <footer className="relative md:hidden bg-primary pt-0 pb-8 border-t border-white/5">
         <div className="container relative z-10 mx-auto px-6">
           <div className="flex flex-col items-center gap-8">
             {/* CTA UTAMA (DIATAS) */}
