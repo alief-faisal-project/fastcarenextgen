@@ -43,19 +43,27 @@ const Footer = () => {
 
             {/* NAVIGATION LINKS */}
             <nav className="flex flex-col items-center gap-4 text-xs text-white/80 tracking-wide">
-              <button
-                onClick={() => openDialog("dukung")}
-                className="text-sm  hover:underline decoration-yellow-400 underline-offset-8 transition-all"
-              >
-                Ikut Berkontribusi
-              </button>
-              <button
-                onClick={() => openDialog("menu")}
-                className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
-              >
-                Butuh Bantuan
-              </button>
+              {/* Baris Atas: Tombol Sebaris */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => openDialog("dukung")}
+                  className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+                >
+                  Ikut Berkontribusi
+                </button>
 
+                {/* Garis Pemisah Vertikal */}
+                <div className="h-3 w-[1px] bg-white/30" />
+
+                <button
+                  onClick={() => openDialog("menu")}
+                  className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+                >
+                  Butuh Bantuan
+                </button>
+              </div>
+
+              {/* Baris Bawah: Sumber Data */}
               <a
                 href="https://sirs.kemkes.go.id"
                 target="_blank"
