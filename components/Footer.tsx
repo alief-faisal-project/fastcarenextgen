@@ -120,30 +120,30 @@ const Footer = () => {
                 className="object-contain brightness-0 invert"
               />
 
-              <p className="text-sm text-gray-300 leading-relaxed">
-                Platform untuk membantu menemukan fasilitas kesehatan terdekat
-                dari lokasi anda dengan cepat dan praktis
+              <p className="text-sm text-white leading-relaxed">
+                Temukan fasilitas kesehatan terdekat secara instan. Cepat,
+                praktis, dan akurat.
               </p>
             </div>
 
             {/* BANTUAN */}
             <div className="px-10 flex flex-col items-start space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider">
+              <h3 className="hover:text-white  transition-all uppercase tracking-[0.2em] text-[20px]">
                 Bantuan
-                <div className="w-10 h-0.5 bg-yellow-400 mt-1" />{" "}
+                <div className="w-20 h-0.5 bg-yellow-400 mt-1" />{" "}
                 {/* GARIS BAWAH */}
               </h3>
 
               <button
                 onClick={() => openDialog("menu")}
-                className="text-sm hover:text-yellow-400 cursor-pointer"
+                className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
               >
                 Hubungi Kami
               </button>
 
               <button
                 onClick={() => openDialog("dukung")}
-                className="text-sm  hover:text-yellow-400 cursor-pointer"
+                className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
               >
                 Dukung Pengembangan
               </button>
@@ -151,9 +151,9 @@ const Footer = () => {
 
             {/* KONTAK */}
             <div className="pl-10 space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider">
+              <h3 className="hover:text-white transition-all uppercase tracking-[0.2em] text-[20px]">
                 Kontak
-                <div className="w-10 h-0.5 bg-yellow-400 mt-1" />{" "}
+                <div className="w-20 h-0.5 bg-yellow-400 mt-1" />{" "}
                 {/* Garis Kuning */}
               </h3>
 
@@ -161,7 +161,7 @@ const Footer = () => {
                 <i className="fa-solid fa-envelope text-white" />
                 <a
                   href="mailto:info@fastcare.id"
-                  className="text-sm hover:text-yellow-400 cursor-pointer"
+                  className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
                 >
                   info@fastcare.id
                 </a>
@@ -173,7 +173,7 @@ const Footer = () => {
                   href="https://wa.me/6283120996468"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm hover:text-yellow-400 cursor-pointer"
+                  className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
                 >
                   +62 831-2099-6468
                 </a>
@@ -190,7 +190,7 @@ const Footer = () => {
               href="https://sirs.kemkes.go.id"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute left-0 pl-8 text-white hover:text-yellow-400"
+              className="absolute left-0 pl-8 hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[10px]"
             >
               Sumber Data: SIRS Kemkes RI
             </a>
