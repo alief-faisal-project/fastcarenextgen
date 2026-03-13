@@ -125,7 +125,7 @@ const Footer = () => {
               </h3>
 
               <div className="flex items-center gap-3">
-                <i className="fa-solid fa-envelope text-yellow-500" />
+                <i className="fa-solid fa-envelope text-white" />
                 <a
                   href="mailto:info@fastcare.id"
                   className="text-sm hover:text-gray-200"
@@ -135,7 +135,7 @@ const Footer = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <i className="fa-brands fa-whatsapp text-yellow-500" />
+                <i className="fa-brands fa-whatsapp text-white" />
                 <a
                   href="https://wa.me/6285692985927"
                   target="_blank"
