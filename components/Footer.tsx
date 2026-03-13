@@ -34,8 +34,26 @@ const Footer = () => {
 
   return (
     <>
+      {/* TOP FOOTER MOBILE (Ramping & Ikon di Sisi) */}
+      <section className="md:hidden bg-primary text-white py-5 px-6 mt-4">
+        <div className="flex items-start gap-4">
+          {/* Ikon di Sisi Kiri */}
+          <div className="text-2xl mt-1 text-white/90">
+            <i className="fa-regular fa-comments" />
+          </div>
+
+          {/* Teks di Sisi Kanan */}
+          <div>
+            <h3 className="font-semibold text-sm">Layanan Bantuan</h3>
+            <p className="text-[11px] text-white/90 leading-tight mt-0.5">
+              Butuh bantuan atau ingin memberi saran? Hubungi kami segera.
+            </p>
+          </div>
+        </div>
+      </section>
       {/* MOBILE FOOTER */}
-      <footer className="relative md:hidden bg-primary mt-5 pt-0 pb-8 border-t border-white/5">
+
+      <footer className="relative md:hidden bg-[#1f1f1f] pt-0 pb-8 border-t border-white/5">
         <div className="container relative z-10 mx-auto px-6">
           <div className="flex flex-col items-center gap-8">
             {/* CTA UTAMA (DIATAS) */}
