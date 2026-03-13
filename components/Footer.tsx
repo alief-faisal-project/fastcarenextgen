@@ -12,9 +12,9 @@ import {
 type ViewType = "menu" | "dukung";
 
 const Footer = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<ViewType>("menu");
-  const [showRek, setShowRek] = useState<boolean>(false);
+  const [showRek, setShowRek] = useState(false);
 
   const noRek = "1961828503";
   const maskedRek = noRek.slice(0, -3) + "***";
@@ -28,51 +28,147 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="bg-primary py-4 md:py-6 mt-12 border-t border-border md:rounded-none">
+      {/* MOBILE FOOTER */}
+      <footer className="md:hidden bg-primary py-5 mt-12 border-t border-border">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white order-3 md:order-1">
-              © 2026 FastCare
-            </p>
+          <div className="flex flex-col items-center text-white text-xs gap-4">
+            {/* HUBUNGI KAMI */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsOpen(true)}
+                className="hover:text-gray-200"
+              >
+                Hubungi Kami
+              </button>
+            </div>
 
+            {/* SUMBER DATA */}
             <a
               href="https://sirs.kemkes.go.id"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-white hover:text-yellow-400 transition-colors order-2"
+              className="hover:text-gray-200 transition text-center"
             >
               Sumber Data: SIRS Kemkes RI
             </a>
 
-            <div className="flex items-center gap-4 order-1 md:order-3">
-              <button
-                onClick={() => setIsOpen(true)}
-                className="text-xs text-white hover:text-yellow-400 transition-colors"
-              >
-                Hubungi Kami
-              </button>
-
-              <div className="hidden md:flex items-center gap-4">
-                <a
-                  href="mailto:info@fastcare.id"
-                  className="text-white hover:text-yellow-400 transition-colors"
-                >
-                  <i className="fa-solid fa-envelope text-base" />
-                </a>
-
-                <a
-                  href="https://wa.me/6285692985927"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-yellow-400 transition-colors"
-                >
-                  <i className="fa-brands fa-whatsapp text-base" />
-                </a>
-              </div>
+            {/* COPYRIGHT AUTO YEAR */}
+            <div className="text-gray-200">
+              © {new Date().getFullYear()} FastCare
             </div>
           </div>
         </div>
       </footer>
+      {/* TOP FOOTER DESKTOP */}
+
+      <section className="hidden md:block bg-blue-400 text-white">
+        <div className="max-w-7xl mx-auto px-8 py-10 flex items-center gap-6">
+          <div className="text-5xl text-blue-200">
+            <i className="fa-regular fa-comments" />
+          </div>
+
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold">Layanan Bantuan</h3>
+
+            <p className="text-sm text-blue-100">
+              Jika ada pertanyaan atau membutuhkan bantuan, atau ingin
+              memberikan kritik dan saran silahkan hubungi kami melalui tombol
+              hubungi kami dibawah.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* DESKTOP FOOTER */}
+
+      <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
+        <div className="max-w-7xl mx-auto px-8 py-12">
+          <div className="grid grid-cols-3 divide-x divide-gray-700">
+            {/* BRAND */}
+            <div className="pr-10 space-y-4">
+              <Image
+                src="/fastcare-logo-footer.webp"
+                alt="FastCare Logo"
+                width={140}
+                height={40}
+                className="object-contain brightness-0 invert"
+              />
+
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Platform untuk membantu masyarakat menemukan fasilitas kesehatan
+                dengan cepat dan praktis. Informasi rumah sakit, layanan
+                darurat, dan lokasi tersedia dalam satu tempat.
+              </p>
+            </div>
+
+            {/* BANTUAN */}
+
+            <div className="px-10 space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider">
+                Bantuan
+              </h3>
+
+              <button
+                onClick={() => setIsOpen(true)}
+                className="text-sm hover:text-yellow-200"
+              >
+                Hubungi Kami{" "}
+              </button>
+            </div>
+
+            {/* KONTAK */}
+
+            <div className="pl-10 space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider">
+                Kontak
+              </h3>
+
+              <div className="flex items-center gap-3">
+                <i className="fa-solid fa-envelope text-white" />
+                <a
+                  href="mailto:info@fastcare.id"
+                  className="text-sm hover:text-yellow-200"
+                >
+                  info@fastcare.id
+                </a>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <i className="fa-brands fa-whatsapp text-white" />
+                <a
+                  href="https://wa.me/6285692985927"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm hover:text-yellow-200"
+                >
+                  +62 856-9298-5927
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-700 mt-10 pt-6 text-sm text-white">
+            <div className="relative flex items-center justify-center">
+              {/* Copyright kiri */}
+              <span className="absolute left-0">
+                © 2026 FastCare. Semua hak dilindungi.
+              </span>
+
+              {/* Sumber data tengah */}
+              <a
+                href="https://sirs.kemkes.go.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-yellow-200"
+              >
+                Sumber Data: SIRS Kemkes RI
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* DIALOG BANTUAN */}
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-md">
@@ -86,8 +182,7 @@ const Footer = () => {
           <div className="space-y-4 pt-2">
             {view === "menu" && (
               <p className="text-muted-foreground text-sm">
-                Kami siap membantu Anda, silahkan pilih bantuan yg anda
-                butuhkan:
+                Kami siap membantu Anda, silahkan pilih bantuan yang dibutuhkan:
               </p>
             )}
 
@@ -97,7 +192,7 @@ const Footer = () => {
                   href="https://wa.me/6285692985927"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition-colors"
+                  className="flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition"
                 >
                   <i className="fa-brands fa-whatsapp text-primary text-2xl" />
                   <div>
@@ -110,7 +205,7 @@ const Footer = () => {
 
                 <a
                   href="mailto:helpfastcare@gmail.com"
-                  className="flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition-colors"
+                  className="flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition"
                 >
                   <i className="fa-solid fa-envelope text-primary text-2xl" />
                   <div>
@@ -124,13 +219,13 @@ const Footer = () => {
                 <button
                   type="button"
                   onClick={() => setView("dukung")}
-                  className="w-full text-left flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition-colors"
+                  className="w-full text-left flex items-center gap-3 p-3 border rounded-xl hover:border-primary hover:bg-accent transition"
                 >
                   <i className="fa-solid fa-qrcode text-primary text-2xl" />
                   <div>
                     <p className="font-medium text-sm">Dukung Pengembangan</p>
                     <p className="text-xs text-muted-foreground">
-                      Donasi untuk mendukung pengembangan platform
+                      Donasi untuk mendukung platform
                     </p>
                   </div>
                 </button>
@@ -138,12 +233,12 @@ const Footer = () => {
             ) : (
               <div className="space-y-4">
                 <p className="text-sm text-justify">
-                  Terima kasih telah menggunakan platform ini. Website ini
-                  sepenuhnya gratis dan dirancang untuk membantu Anda menemukan
-                  fasilitas kesehatan dengan cepat, mudah, dan praktis.
+                  Website ini sepenuhnya gratis dan dibuat untuk membantu
+                  masyarakat menemukan fasilitas kesehatan dengan cepat dan
+                  mudah.
                 </p>
 
-                <div className="flex items-center gap-4 pt-2">
+                <div className="flex items-center gap-4">
                   <div className="w-20 h-20 flex items-center justify-center bg-white rounded-lg border overflow-hidden">
                     <Image
                       src="/bni-logo.webp"
@@ -165,13 +260,13 @@ const Footer = () => {
                       <button
                         type="button"
                         onClick={() => setShowRek(!showRek)}
-                        className="text-xs hover:scale-110 transition-transform"
+                        className="text-xs"
                       >
                         <i
                           className={`fa-solid ${
                             showRek ? "fa-eye-slash" : "fa-eye"
                           }`}
-                        />
+                        />{" "}
                       </button>
                     </div>
 
