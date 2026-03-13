@@ -35,32 +35,45 @@ const Footer = () => {
   return (
     <>
       {/* MOBILE FOOTER */}
-      <footer className="md:hidden bg-primary py-5 mt-12 border-t border-border">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center text-white text-xs gap-4">
-            {/* HUBUNGI KAMI */}
-            <div className="flex items-center gap-4">
+      <footer className="relative md:hidden bg-primary mt-5 pt- pb-8 border-t border-white/5">
+        <div className="container relative z-10 mx-auto px-6">
+          <div className="flex flex-col items-center gap-8">
+            {/* CTA UTAMA (DIATAS) */}
+            <div className="w-full flex justify-center"></div>
+
+            {/* NAVIGATION LINKS */}
+            <nav className="flex flex-col items-center gap-4 text-xs text-white/80 tracking-wide">
+              <button
+                onClick={() => openDialog("dukung")}
+                className="text-sm  hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+              >
+                Ikut Berkontribusi
+              </button>
               <button
                 onClick={() => openDialog("menu")}
-                className="hover:text-gray-200"
+                className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
               >
-                Hubungi Kami
+                Butuh Bantuan
               </button>
-            </div>
 
-            {/* SUMBER DATA */}
-            <a
-              href="https://sirs.kemkes.go.id"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-200 transition text-center"
-            >
-              Sumber Data: SIRS Kemkes RI
-            </a>
+              <a
+                href="https://sirs.kemkes.go.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+              >
+                Sumber Data: SIRS Kemkes RI
+              </a>
+            </nav>
 
-            {/* COPYRIGHT AUTO YEAR */}
-            <div className="text-gray-200">
-              © {new Date().getFullYear()} FastCare
+            {/* COPYRIGHT AREA */}
+            <div className="flex flex-col items-center gap-3 w-full pt-8 border-t border-white/10 text-center">
+              <div className="text-[10px] text-white/40 uppercase tracking-[0.2em]">
+                © {new Date().getFullYear()} FastCare
+              </div>
+              <p className="text-[9px] text-white/30 italic">
+                Seluruh hak cipta dilindungi undang-undang.
+              </p>
             </div>
           </div>
         </div>
@@ -87,7 +100,7 @@ const Footer = () => {
 
       {/* DESKTOP FOOTER */}
       <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
-        <div className="max-w-7xl mx-auto px-8 py-10">
+        <div className="max-w-7xl mx-auto px-8 py-18">
           <div className="grid grid-cols-3 divide-x divide-white">
             {/* BRAND */}
             <div className="pr-10 space-y-4">
@@ -100,8 +113,8 @@ const Footer = () => {
               />
 
               <p className="text-sm text-gray-300 leading-relaxed">
-                Platform untuk membantu  menemukan fasilitas kesehatan terdekat dari lokasi anda
-                dengan cepat dan praktis
+                Platform untuk membantu menemukan fasilitas kesehatan terdekat
+                dari lokasi anda dengan cepat dan praktis
               </p>
             </div>
 
@@ -162,19 +175,23 @@ const Footer = () => {
         </div>
 
         {/* FOOTER PALING BAWAH */}
-        <div className="bg-[#161616] ">
+        <div className="bg-[#161616]">
           <div className="relative w-full px-20 py-2 flex items-center justify-center text-xs text-white">
-            <span className="absolute left-0 pl-8 ">
-              © {new Date().getFullYear()} FastCare. Semua hak dilindungi.
-            </span>
+            {/* Sumber Data sekarang di kiri */}
             <a
               href="https://sirs.kemkes.go.id"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-yellow-400 "
+              className="absolute left-0 pl-8 text-white hover:text-yellow-400"
             >
               Sumber Data: SIRS Kemkes RI
             </a>
+
+            {/* Copyright sekarang di tengah */}
+            <span>
+              Copyright © {new Date().getFullYear()} FastCare. Semua hak
+              dilindungi.
+            </span>
           </div>
         </div>
       </footer>
