@@ -63,7 +63,7 @@ const Footer = () => {
       {/* TOP FOOTER DESKTOP */}
 
       <section className="hidden md:block bg-blue-400 text-white">
-        <div className="max-w-7xl mx-auto px-8 py-8 flex items-center gap-6">
+        <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
           <div className="text-5xl text-blue-200">
             <i className="fa-regular fa-comments" />
           </div>
@@ -83,7 +83,7 @@ const Footer = () => {
       {/* DESKTOP FOOTER */}
 
       <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
-        <div className="max-w-7xl mx-auto px-8 py-8">
+        <div className="max-w-7xl mx-auto px-8 py-10">
           <div className="grid grid-cols-3 divide-x divide-gray-700">
             {/* BRAND */}
             <div className="pr-10 space-y-4">
@@ -105,7 +105,7 @@ const Footer = () => {
             {/* BANTUAN */}
 
             <div className="px-10 space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-yellow-500">
+              <h3 className="text-sm font-semibold uppercase tracking-wider">
                 Bantuan
               </h3>
 
@@ -120,7 +120,7 @@ const Footer = () => {
             {/* KONTAK */}
 
             <div className="pl-10 space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider  text-yellow-500">
+              <h3 className="text-sm font-semibold uppercase tracking-wider">
                 Kontak
               </h3>
 
