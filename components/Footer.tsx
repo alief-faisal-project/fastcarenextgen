@@ -106,7 +106,7 @@ const Footer = () => {
       </footer>
 
       {/* TOP FOOTER DESKTOP */}
-      <section className="hidden md:block bg-blue-400 text-white mt-16">
+      <section className="hidden md:block bg-primary text-white mt-16">
         <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
           <div className="text-5xl text-white">
             <i className="fa-regular fa-comments" />
