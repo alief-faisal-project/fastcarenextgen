@@ -237,10 +237,9 @@ const Navbar = () => {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 text-xl font-semibold text-muted-foreground hover:text-primary transition-colors"
               >
                 <i className="fa-regular fa-user"></i>
-                <span>Login</span>
               </Link>
             )}
           </div>
