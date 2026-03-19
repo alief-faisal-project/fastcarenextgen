@@ -35,7 +35,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
       <div className="flex flex-col items-center space-y-8">
         <div className="loading-pulse">
           <Image
-            src="/fastcare-logo.webp"
+            src="/logo_sigap.png"
             alt="FastCare.id"
             width={200}
             height={80}

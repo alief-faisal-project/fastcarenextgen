@@ -44,7 +44,7 @@ const Login = () => {
         {/* Logo */}
         <div className="text-center mb-8">
           <Image
-            src="/fastcare-logo.webp"
+            src="/logo_sigap.png"
             alt="FastCare.id"
             width={160}
             height={48}

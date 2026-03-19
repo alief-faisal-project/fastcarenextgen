@@ -73,7 +73,7 @@ useEffect(() => {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/fastcare-logo.webp"
+                src="/logo_sigap.png"
                 alt="FastCare.id"
                 width={120}
                 height={32}

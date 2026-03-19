@@ -67,7 +67,7 @@ const Footer = () => {
                   onClick={() => openDialog("dukung")}
                   className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
                 >
-                  Ikut Berkontribusi
+                  INFORMASI
                 </button>
 
                 {/* Garis Pemisah Vertikal */}
@@ -77,7 +77,7 @@ const Footer = () => {
                   onClick={() => openDialog("menu")}
                   className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
                 >
-                  Butuh Bantuan
+                  BANTUAN
                 </button>
               </div>
 
@@ -106,7 +106,7 @@ const Footer = () => {
       </footer>
 
       {/* TOP FOOTER DESKTOP */}
-      <section className="hidden md:block bg-primary text-white mt-16">
+      <section className="hidden md:block bg-blue-800 text-white mt-16">
         <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
           <div className="text-5xl text-white">
             <i className="fa-regular fa-comments" />
@@ -131,7 +131,7 @@ const Footer = () => {
             {/* BRAND */}
             <div className="pr-10 space-y-4">
               <Image
-                src="/fastcare-logo-footer.webp"
+                src="/logosigap_footer.png"
                 alt="FastCare Logo"
                 width={120}
                 height={40}
@@ -147,7 +147,7 @@ const Footer = () => {
             {/* BANTUAN */}
             <div className="px-10 flex flex-col items-start space-y-4">
               <h3 className="hover:text-white  transition-all uppercase tracking-[0.2em] text-[20px]">
-                Bantuan
+                INFORMASI
                 <div className="w-20 h-0.5 bg-yellow-400 mt-1" />{" "}
                 {/* GARIS BAWAH */}
               </h3>
@@ -156,7 +156,7 @@ const Footer = () => {
                 onClick={() => openDialog("menu")}
                 className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
               >
-                Hubungi Kami
+                Bantuan
               </button>
 
               <button
@@ -274,10 +274,11 @@ const Footer = () => {
             ) : (
               <div className="space-y-4">
                 <p className="text-[15px] text-justify">
-                  Platform ini sepenuhnya gratis dan dibuat untuk membantu
-                  masyarakat menemukan fasilitas kesehatan dengan cepat dan
-                  praktis. Informasi rumah sakit, layanan darurat, dan lokasi
-                  tersedia dalam satu tempat.
+                  Platform akses kesehatan gratis yang dirancang untuk membantu
+                  masyarakat menemukan layanan darurat dengan cepat dan mudah.
+                  Proyek ini didedikasikan sepenuhnya sebagai amal jariyah untuk
+                  almarhum Ayah saya. Semoga setiap manfaat yang dirasakan
+                  menjadi kebaikan yang terus mengalir bagi beliau
                 </p>
 
                 <div className="flex items-center gap-4">
