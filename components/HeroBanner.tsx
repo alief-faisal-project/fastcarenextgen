@@ -298,14 +298,14 @@ const HeroBanner = () => {
             <div key={index} className="flex flex-col items-center gap-2">
               <a
                 href={`tel:${service.number.replace(/\s/g, "")}`}
-                className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border  rounded-2xl w-24"
+                className="flex flex-col items-center gap-2 px-4 py-3 bg-primary rounded-3xl w-24"
               >
-                <i className={`${service.icon} text-primary text-lg`} />
-                <span className="text-xs font-bold text-primary text-center">
+                <i className={`${service.icon} text-white text-lg`} />
+                <span className="text-[13px] font-bold text-white text-center">
                   {service.number}
                 </span>
               </a>
-              <span className="text-[10px] font-medium text-foreground text-center leading-tight">
+              <span className="text-[12px] font-medium text-foreground text-center leading-tight">
                 {service.label}
               </span>
             </div>
@@ -324,16 +324,16 @@ const HeroBanner = () => {
             >
               <a
                 href={`tel:${service.number.replace(/\s/g, "")}`}
-                className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border rounded-3xl min-w-[100px]"
+                className="flex flex-col items-center gap-2 px-4 py-3 bg-primary rounded-3xl min-w-[100px]"
               >
-                <i className={`${service.icon} text-primary text-xl`} />
+                <i className={`${service.icon} text-white text-xl`} />
 
-                <span className="text-[10px] font-bold text-primary text-center">
+                <span className="text-[12px] font-bold text-white text-center">
                   {service.number}
                 </span>
               </a>
 
-              <span className="text-[9.5px] font-medium text-foreground text-center leading-tight">
+              <span className="text-[11px] font-medium text-foreground text-center leading-tight">
                 {service.label}
               </span>
             </div>
