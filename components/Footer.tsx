@@ -107,7 +107,7 @@ const Footer = () => {
 
       {/* TOP FOOTER DESKTOP */}
       <section className="hidden md:block bg-primary text-white mt-16">
-        <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
+        <div className="max-w-7xl mx-auto px-8 py-5 flex items-center gap-6">
           <div className="text-5xl text-white">
             <i className="fa-regular fa-comments" />
           </div>
@@ -126,7 +126,7 @@ const Footer = () => {
 
       {/* DESKTOP FOOTER */}
       <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
-        <div className="max-w-7xl mx-auto px-8 py-18">
+        <div className="max-w-7xl mx-auto px-8 py-16">
           <div className="grid grid-cols-3 divide-x divide-white">
             {/* BRAND */}
             <div className="pr-10 space-y-4">

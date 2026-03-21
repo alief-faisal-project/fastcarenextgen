@@ -85,7 +85,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar-sticky  border-3xl shadow-md ">
+    <nav className="navbar-sticky  border-3xl shadow-[0_1px_2px_rgba(0,0,0,0.05)] ">
       <div className="container mx-auto px-4 ">
         <div className="flex items-center justify-between h-17 md:h-25">
           {/* Logo */}
@@ -220,7 +220,7 @@ const Navbar = () => {
                   className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                 >
                   <i className="fa-solid fa-sliders"></i>
-                  <span>Dashboard</span>
+                  <span>Dashboard Admin</span>
                 </Link>
 
                 <button
