@@ -95,6 +95,15 @@ const HospitalDetail = () => {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
+                {/* badge igd */}
+                {hospital?.hasIGD && (
+                  <div className="absolute top-0 right-0 z-10">
+                    <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-bl-xl shadow-md text-center leading-tight">
+                      <span className="text-[20px] font-bold">TERSEDIA IGD 24 JAM</span>
+                    </span>
+                  </div>
+                )}
+
                 {/* Bottom Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h1 className="text-2xl font-bold text-white font-heading">
@@ -256,10 +265,10 @@ const HospitalDetail = () => {
 
             {/* badge igd */}
             {hospital?.hasIGD && (
-              <div className="absolute top-0 right-8 z-10">
-                <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-b-xl shadow-md text-center leading-tight">
-                  <span className="text-xs font-bold">IGD</span>
-                  <span className="text-[10px] font-semibold">24 JAM</span>
+              <div className="absolute top-0 right-0 z-10">
+                <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-bl-xl shadow-md text-center leading-tight">
+                  <span className="text-xl font-bold">IGD</span>
+                  <span className="text-[15px] font-semibold">24 JAM</span>
                 </span>
               </div>
             )}

@@ -105,27 +105,10 @@ const Footer = () => {
         </div>
       </footer>
 
-      {/* TOP FOOTER DESKTOP */}
-      <section className="hidden md:block bg-primary text-white mt-16">
-        <div className="max-w-7xl mx-auto px-8 py-5 flex items-center gap-6">
-          <div className="text-5xl text-white">
-            <i className="fa-regular fa-comments" />
-          </div>
 
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold">Layanan Bantuan</h3>
-
-            <p className="text-sm text-white">
-              Jika ada pertanyaan atau membutuhkan bantuan, atau ingin
-              memberikan kritik dan saran silahkan hubungi kami pada kontak
-              dibawah.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* DESKTOP FOOTER */}
-      <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700">
+      <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700 mt-30">
         <div className="max-w-7xl mx-auto px-8 py-16">
           <div className="grid grid-cols-3 divide-x divide-white">
             {/* BRAND */}
@@ -139,7 +122,7 @@ const Footer = () => {
               />
 
               <p className="text-sm text-white leading-relaxed">
-                Temukan fasilitas kesehatan terdekat secara instan. Cepat,
+                Platform pencarian layanan kesehatan terdekat secara cepat,
                 praktis, dan akurat.
               </p>
             </div>

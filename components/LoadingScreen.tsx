@@ -44,7 +44,7 @@ const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
           />
         </div>
         <p className="text-muted-foreground text-sm md:text-base font-medium">
-          Cari Rumah Sakit Terdekat di Banten
+          Segera Temukan Pertolongan Medis Terdekat
         </p>
         <div className="w-64 md:w-80">
           <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">

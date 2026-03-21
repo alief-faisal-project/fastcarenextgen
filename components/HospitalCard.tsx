@@ -66,7 +66,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
           style={{ transform: "skewX(-15deg)" }}
         >
           <span style={{ display: "inline-block", transform: "skewX(15deg)" }}>
-            {hospital.hasIGD ? "IGD Tersedia 24 Jam" : "UGD Terbatas"}
+            {hospital.hasIGD ? "IGD 24 Jam" : "UGD Terbatas"}
           </span>
         </span>
       </div>

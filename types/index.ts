@@ -60,6 +60,7 @@ export const BANTEN_CITIES = [
   "Kabupaten Tangerang",
   "Kabupaten Pandeglang",
   "Kabupaten Lebak",
+  "Jakarta Selatan",
 ] as const;
 
 export type BantenCity = (typeof BANTEN_CITIES)[number];
