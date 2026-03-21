@@ -266,7 +266,7 @@ const Footer = () => {
                   <div>
                     <p className="font-medium text-sm">Email</p>
                     <p className="text-xs text-muted-foreground">
-                      helpfastcare@gmail.com
+                      sigap@gmail.com
                     </p>
                   </div>
                 </a>
