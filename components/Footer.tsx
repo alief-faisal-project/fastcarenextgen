@@ -65,7 +65,7 @@ const Footer = () => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => openDialog("dukung")}
-                  className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+                  className="hover:text-white hover:underline decoration-yellow-500 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[12px]"
                 >
                   INFORMASI
                 </button>
@@ -75,7 +75,7 @@ const Footer = () => {
 
                 <button
                   onClick={() => openDialog("menu")}
-                  className="text-sm hover:underline decoration-yellow-400 underline-offset-8 transition-all"
+                  className="hover:text-white hover:underline decoration-yellow-500 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[12px]"
                 >
                   BANTUAN
                 </button>
@@ -86,7 +86,7 @@ const Footer = () => {
                 href="https://sirs.kemkes.go.id"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[10px]"
+                className="hover:text-white hover:underline decoration-yellow-500 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[10px]"
               >
                 Sumber Data: SIRS Kemkes RI
               </a>
@@ -95,7 +95,7 @@ const Footer = () => {
             {/* COPYRIGHT AREA */}
             <div className="flex flex-col items-center gap-3 w-full pt-8 border-t border-white/10 text-center">
               <div className="text-[10px] text-white/40 uppercase tracking-[0.2em]">
-                © {new Date().getFullYear()} FastCare
+                © {new Date().getFullYear()} SIGAP
               </div>
               <p className="text-[9px] text-white/30 italic">
                 Seluruh hak cipta dilindungi undang-undang.
@@ -106,7 +106,7 @@ const Footer = () => {
       </footer>
 
       {/* TOP FOOTER DESKTOP */}
-      <section className="hidden md:block bg-blue-800 text-white mt-16">
+      <section className="hidden md:block bg-primary text-white mt-16">
         <div className="max-w-7xl mx-auto px-8 py-6 flex items-center gap-6">
           <div className="text-5xl text-white">
             <i className="fa-regular fa-comments" />
@@ -117,8 +117,8 @@ const Footer = () => {
 
             <p className="text-sm text-white">
               Jika ada pertanyaan atau membutuhkan bantuan, atau ingin
-              memberikan kritik dan saran silahkan hubungi kami melalui tombol
-              hubungi kami dibawah.
+              memberikan kritik dan saran silahkan hubungi kami pada kontak
+              dibawah.
             </p>
           </div>
         </div>
@@ -181,7 +181,7 @@ const Footer = () => {
                   href="mailto:info@fastcare.id"
                   className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
                 >
-                  info@fastcare.id
+                  EMAIL
                 </a>
               </div>
 
@@ -193,7 +193,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
                 >
-                  +62 831-2099-6468
+                  Whatsapp
                 </a>
               </div>
             </div>
@@ -215,7 +215,7 @@ const Footer = () => {
 
             {/* Copyright sekarang di tengah */}
             <span>
-              Copyright © {new Date().getFullYear()} FastCare. Semua hak
+              Copyright © {new Date().getFullYear()} SIGAP. Semua hak
               dilindungi.
             </span>
           </div>

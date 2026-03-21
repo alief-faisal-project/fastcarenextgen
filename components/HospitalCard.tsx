@@ -57,7 +57,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
         )}
       </div>
 
-      {/* IGD Badge */}
+      {/* IGD Badge Landing Page */}
       <div className="relative -mt-1 -ml-1 h-[22px] flex-shrink-0">
         <span
           className={`inline-block px-4 py-1 text-[10px] font-bold text-white ${

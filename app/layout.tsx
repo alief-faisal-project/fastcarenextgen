@@ -31,24 +31,21 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0b1f3a", // Pindahkan ke sini agar konsisten di Android
+  themeColor: "#0b1f3a", 
 };
 
-/* ============================= */
 /* SEO METADATA */
-/* ============================= */
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fastcare.id"),
   title: {
-    default: "FastCare© Pencarian Layanan Kesehatan Terdekat",
+    default: "SIGAP© Segera Temukan Pertolongan Medis Terdekat",
     template: "%s | FastCare",
   },
   description:
     "FastCare adalah platform untuk mencari rumah sakit, klinik, dan layanan kesehatan terdekat dengan cepat dan mudah.",
-  // ... keywords, authors, dll tetap sama ...
 
-  // TAMBAHKAN INI UNTUK PWA:
+  // PWA CONFIG:
   manifest: "/manifest.json",
   applicationName: "FastCare",
   appleWebApp: {
@@ -64,13 +61,10 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
   },
-  // ... (sisa metadata openGraph dan twitter tetap sama)
+
 };
 
-/* ============================= */
 /* ROOT LAYOUT */
-/* ============================= */
-
 export default function RootLayout({
   children,
 }: {

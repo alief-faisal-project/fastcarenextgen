@@ -217,7 +217,7 @@ const HeroBanner = () => {
                     <button
                       onClick={goToPrevious}
                       disabled={currentSlide === 0}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg disabled:opacity-40"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg disabled:opacity-40 "
                     >
                       <i className="fa-solid fa-chevron-left text-lg" />
                     </button>

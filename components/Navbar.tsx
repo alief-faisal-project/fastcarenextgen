@@ -203,7 +203,7 @@ const Navbar = () => {
 
               <input
                 type="text"
-                placeholder="Cari pertolongan medis terdekat..."
+                placeholder="Cari Layanan medis terdekat..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 rounded-xl border border-border focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card text-sm"
