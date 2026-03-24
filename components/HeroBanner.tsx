@@ -3,97 +3,40 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
-import { spawn } from "child_process";
-
-const emergencyServices = [
-  { icon: "fa-solid fa-truck-medical", label: "Ambulan", number: "119" },
-  {
-    icon: "fa-solid fa-heart-crack",
-    label: "Kesehatan Jiwa",
-    number: "119 ext. 8",
-  },
-  {
-    icon: "fa-solid fa-triangle-exclamation",
-    label: "Layanan Darurat",
-    number: "112",
-  },
-  {
-    icon: "fa-solid fa-person-shelter",
-    label: (
-      <>
-        Kekerasan Perempuan
-        <br />
-        dan Anak
-      </>
-    ),
-    number: "129",
-  },
-  { icon: "fa-solid fa-building-shield", label: "Polisi", number: "110" },
-  {
-    icon: "fa-solid fa-fire-extinguisher",
-    label: "Pemadam Kebakaran",
-    number: "113",
-  },
-  {
-    icon: "fa-solid fa-road",
-    label: "Jasa Marga (Tol)",
-    number: "14080",
-  },
-  {
-    icon: "fa-solid fa-bolt",
-    label: "Gangguan Listrik (PLN)",
-    number: "123",
-  },
-];
 
 const HeroBanner = () => {
   const { heroBanners } = useApp();
-
-  // ================= STATE =================
-  // Menyimpan index slide aktif
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // ================= REF =================
   const mobileRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const desktopIndicatorRef = useRef<HTMLDivElement>(null);
   const desktopTrackRef = useRef<HTMLDivElement | null>(null);
 
-  // Ref untuk drag desktop
   const dragStartXRef = useRef<number | null>(null);
   const dragDeltaRef = useRef<number>(0);
   const isDraggingRef = useRef<boolean>(false);
 
-  // ================= FILTER BANNER =================
-  // Ambil banner aktif lalu urutkan berdasarkan order
   const activeBanners = heroBanners
     .filter((b) => b.isActive)
     .sort((a, b) => a.order - b.order);
 
-  // ================= DESKTOP LOGIC =================
-
-  // Hitung maksimal slide desktop (karena tampil 3 banner)
   const maxDesktopSlide =
     activeBanners.length > 3 ? activeBanners.length - 3 : 0;
 
-  // Pindah ke slide sebelumnya
   const goToPrevious = () => {
     if (currentSlide === 0) return;
     setCurrentSlide((prev) => prev - 1);
   };
 
-  // Pindah ke slide berikutnya
   const goToNext = () => {
     if (currentSlide >= maxDesktopSlide) return;
     setCurrentSlide((prev) => prev + 1);
   };
 
-  // DRAG DESKTOP
-
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     isDraggingRef.current = true;
     dragStartXRef.current = e.clientX;
-    dragDeltaRef.current = 0;
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -104,90 +47,85 @@ const HeroBanner = () => {
   const onPointerUp = () => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-
     const delta = dragDeltaRef.current;
-    const threshold = 40; 
-
-    if (delta > threshold) {
-      goToPrevious();
-    } else if (delta < -threshold) {
-      goToNext();
-    }
-
+    if (delta > 40) goToPrevious();
+    else if (delta < -40) goToNext();
     dragStartXRef.current = null;
     dragDeltaRef.current = 0;
   };
-
-  // MOBILE INDICATOR  
 
   useEffect(() => {
     const container = mobileRef.current;
     const indicator = indicatorRef.current;
     if (!container || !indicator) return;
-
-    let ticking = false;
-
     const updateIndicator = () => {
       const maxScroll = container.scrollWidth - container.clientWidth;
       const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
-
-      const trackWidth = 64;
-      const dotWidth = 16;
-      const maxTranslate = trackWidth - dotWidth;
-
-      indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
-      ticking = false;
+      indicator.style.transform = `translate3d(${progress * (64 - 16)}px,0,0)`;
     };
-
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateIndicator);
-        ticking = true;
-      }
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
-
-    // update sekali setelah render
-    requestAnimationFrame(updateIndicator);
-
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
+    container.addEventListener("scroll", updateIndicator, { passive: true });
+    return () => container.removeEventListener("scroll", updateIndicator);
   }, [activeBanners.length]);
-
-  // ================= DESKTOP INDICATOR =================
 
   useEffect(() => {
     const indicator = desktopIndicatorRef.current;
     if (!indicator) return;
-
     const progress = maxDesktopSlide > 0 ? currentSlide / maxDesktopSlide : 0;
-
-    const trackWidth = 64; // w-16
-    const dotWidth = 28; // w-7
-    const maxTranslate = trackWidth - dotWidth; // 36px
-
-    indicator.style.transform = `translate3d(${progress * maxTranslate}px,0,0)`;
+    indicator.style.transform = `translate3d(${progress * (64 - 28)}px,0,0)`;
   }, [currentSlide, maxDesktopSlide]);
 
   return (
-    <section className="py-3 md:py-4">
-      <div className="relative">
+    // pt-20/pt-32 dipertahankan agar konten tidak tertutup fixed navbar
+    <section className="relative pt-20 md:pt-32 pb-4 overflow-hidden">
+      {/* BACKGROUND GRADASI NAVY PEKAT (#00078F) -> TRANSPARENT */}
+      <div
+        className=" absolute top-0 left-0 w-full h-full -z-10 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, #00078F 0%, rgba(0, 7, 143, 0.4) 60%, rgba(255, 255, 255, 0) 100%)",
+        }}
+      />
+
+      {/* DESKTOP ONLY WAVES */}
+      <div className="hidden md:block absolute top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+        {/* Wave belakang - Navy Soft */}
+        <svg
+          className="absolute top-[-120px] w-full h-[600px]"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="#00078F"
+            fillOpacity="0.1"
+            d="M0,0 L1440,0 L1440,160 C1360,112,1280,128,1120,160 C960,192,800,224,640,256 C480,250.7,320,245,160,203 L80,181.3 L0,160 Z"
+          />
+        </svg>
+
+        {/* Wave depan - Navy Dongker Pekat Halus */}
+        <svg
+          className="absolute top-[-100px] w-full h-[650px]"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="#00078F"
+            fillOpacity="0.15"
+            d="M0,0 L1440,0 L1440,96 L1380,122.7 C1320,149,1200,203,1080,218.7 C960,235,840,213,720,186.7 C600,160,480,128,360,133.3 C240,139,120,181,60,202.7 L0,224 Z"
+          />
+        </svg>
+      </div>
+
+      <div className="relative z-10">
         {/* ================= DESKTOP ================= */}
         {activeBanners.length > 0 && (
           <div className="hidden md:block container mx-auto px-4 mt-4">
-            {/* Wrapper utama desktop */}
             <div className="relative">
-              {/* Wrapper banner agar arrow benar-benar di tengah */}
               <div className="relative overflow-hidden">
-                {/* Track banner */}
                 <div
                   ref={desktopTrackRef}
                   onPointerDown={onPointerDown}
                   onPointerMove={onPointerMove}
                   onPointerUp={onPointerUp}
-                  onPointerCancel={onPointerUp}
                   className="flex gap-4 transition-transform duration-500 ease-in-out"
                   style={{
                     transform: `translateX(-${currentSlide * (100 / 3)}%)`,
@@ -197,7 +135,7 @@ const HeroBanner = () => {
                     <a
                       key={banner.id}
                       href={banner.link || "#"}
-                      className="flex-shrink-0 w-[calc(33.333%-11px)] rounded-3xl overflow-hidden relative"
+                      className="flex-shrink-0 w-[calc(33.333%-11px)] rounded-3xl overflow-hidden relative shadow-xl transition-transform hover:scale-[1.02]"
                     >
                       <div className="aspect-[2/1] relative">
                         <Image
@@ -210,36 +148,32 @@ const HeroBanner = () => {
                     </a>
                   ))}
                 </div>
-
-                {/* Arrow navigation desktop */}
                 {activeBanners.length > 3 && (
                   <>
                     <button
                       onClick={goToPrevious}
                       disabled={currentSlide === 0}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg disabled:opacity-40 "
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg disabled:opacity-40 transition-all hover:bg-slate-50"
                     >
-                      <i className="fa-solid fa-chevron-left text-lg" />
+                      <i className="fa-solid fa-chevron-left text-lg text-[#00078F]" />
                     </button>
-
                     <button
                       onClick={goToNext}
                       disabled={currentSlide === maxDesktopSlide}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg disabled:opacity-40"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg disabled:opacity-40 transition-all hover:bg-slate-50"
                     >
-                      <i className="fa-solid fa-chevron-right text-lg" />
+                      <i className="fa-solid fa-chevron-right text-lg text-[#00078F]" />
                     </button>
                   </>
                 )}
               </div>
-
-              {/* Indicator arrow desktop  */}
+              {/* DESKTOP INDICATOR (Pill/Scroll Style) */}
               {activeBanners.length > 1 && (
-                <div className="flex items-center justify-center mt-4">
-                  <div className="relative w-16 h-5 rounded-full bg-muted-foreground/20 overflow-hidden">
+                <div className="flex items-center justify-center mt-6">
+                  <div className="relative w-16 h-4 rounded-full bg-card overflow-hidden border border-white/10">
                     <div
                       ref={desktopIndicatorRef}
-                      className="absolute top-0 left-0 h-5 w-7 rounded-full bg-primary will-change-transform"
+                      className="absolute top-0 left-0 h-full w-7 rounded-full bg-primary will-change-transform shadow-sm"
                     />
                   </div>
                 </div>
@@ -248,19 +182,18 @@ const HeroBanner = () => {
           </div>
         )}
 
-        {/* Mobile Section */}
+        {/* ================= MOBILE (Clean Gradasi, No Wave) ================= */}
         {activeBanners.length > 0 && (
-          <div className="md:hidden px-4">
+          <div className="md:hidden px-4 pt-1">
             <div
               ref={mobileRef}
-              className="flex gap-3 overflow-x-auto scrollbar-hide"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory"
             >
               {activeBanners.map((banner) => (
                 <a
                   key={banner.id}
                   href={banner.link || "#"}
-                  className="flex-shrink-0 w-[calc(50%-6px)] rounded-3xl overflow-hidden"
+                  className="flex-shrink-0 w-[85%] rounded-2xl overflow-hidden relative shadow-lg snap-center"
                 >
                   <div className="aspect-[2/1] relative">
                     <Image
@@ -269,76 +202,23 @@ const HeroBanner = () => {
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 " />
                   </div>
                 </a>
               ))}
             </div>
-
+            {/* MOBILE INDICATOR (Hapus Celah Putih dengan pt-1, pertahankan w-12/bg-white/30) */}
             {activeBanners.length > 1 && (
-              <div className="flex items-center justify-center mt-3">
-                <div className="relative w-16 h-2 rounded-full bg-muted-foreground/20 overflow-hidden">
+              <div className="flex items-center justify-center mt-4">
+                <div className="relative w-12 h-2 rounded-full bg-card overflow-hidden">
                   <div
                     ref={indicatorRef}
-                    className="absolute top-0 left-0 h-2 w-4 rounded-full bg-primary will-change-transform"
+                    className="absolute top-0 left-0 h-full w-4 rounded-full bg-primary will-change-transform"
                   />
                 </div>
               </div>
             )}
           </div>
         )}
-      </div>
-
-      {/* ================= EMERGENCY SERVICES ================= */}
-
-      <div className="container mx-auto px-4 mt-4">
-        {/* Desktop emergency */}
-        <div className="hidden md:flex items-start justify-center gap-6 w-full max-w-4xl mx-auto">
-          {emergencyServices.map((service, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
-              <a
-                href={`tel:${service.number.replace(/\s/g, "")}`}
-                className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border rounded-3xl w-24 hover:scale-105"
-              >
-                <i className={`${service.icon} text-primary text-lg`} />
-                <span className="text-xs font-bold text-primary text-center">
-                  {service.number}
-                </span>
-              </a>
-              <span className="text-[12px] font-medium text-foreground text-center leading-tight">
-                {service.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Mobile emergency */}
-        <div
-          className="md:hidden flex gap-3 overflow-x-auto scrollbar-hide"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {emergencyServices.map((service, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center gap-1 flex-shrink-0"
-            >
-              <a
-                href={`tel:${service.number.replace(/\s/g, "")}`}
-                className="flex flex-col items-center gap-2 px-4 py-3 bg-card border border-border rounded-3xl min-w-[100px]"
-              >
-                <i className={`${service.icon} text-primary text-xl`} />
-
-                <span className="text-[10px] font-bold text-primary text-center">
-                  {service.number}
-                </span>
-              </a>
-
-              <span className="text-[9.5px] font-medium text-foreground text-center leading-tight">
-                {service.label}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );

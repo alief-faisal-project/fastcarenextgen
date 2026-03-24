@@ -84,7 +84,7 @@ const MobileSearch = () => {
             <i className="fa-solid fa-location-arrow text-primary" />
 
             {/* Text lokasi yang tampil */}
-            <span className="text-sm text-foreground truncate flex-1 text-left">
+            <span className="text-sm text-foreground truncate flex-1 text-left ">
               {selectedCity === "Lokasi Terdekat"
                 ? "Lokasi Terdekat"
                 : selectedCity === "Semua"
@@ -100,7 +100,7 @@ const MobileSearch = () => {
           </button>
 
           {isLocationOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border shadow-lg z-50 py-2 animate-scale-in">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-card rounded-2xl border border-border shadow-lg z-50 py-2 animate-scale-in">
               {/* Deteksi lokasi otomatis */}
               <button
                 onClick={handleDetectLocation}

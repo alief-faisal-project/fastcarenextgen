@@ -105,33 +105,33 @@ const Footer = () => {
         </div>
       </footer>
 
-      {/* DESKTOP FOOTER */}
-      <footer className="hidden md:block relative bg-[#ffffff57] text-primary mt-30 overflow-hidden border border-gray">
-        {/* BIG WAVE BACKGROUND */}
-        <div className="absolute inset-0 -z-10">
-          {/* Wave belakang  */}
+      {/* DESKTOP FOOTER WITH WAVE BOTTOM-UP */}
+      <footer className="hidden md:block relative pt-20 md:pt-32 pb-4 overflow-hidden">
+        {/* DESKTOP ONLY WAVES (INVERTED FROM HERO STYLE) */}
+        <div className="absolute bottom-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+          {/* Wave belakang - Navy Soft (Bottom-up) */}
           <svg
-            className="absolute bottom-0 w-full h-[320px]"
+            className="absolute bottom-[-20px] w-full h-[400px]"
             viewBox="0 0 1440 320"
             preserveAspectRatio="none"
           >
             <path
-              fill="#3b82f6"
-              fillOpacity="0.12"
-              d="M0,160L80,181.3C160,203,320,245,480,250.7C640,256,800,224,960,192C1120,160,1280,128,1360,112L1440,96V320H0Z"
+              fill="#00078F"
+              fillOpacity="0.1"
+              d="M0,320L80,298.7C160,277,320,235,480,229.3C640,224,800,256,960,288C1120,320,1280,352,1360,368L1440,384V320H0Z"
             />
           </svg>
 
-          {/* Wave depan  */}
+          {/* Wave depan - Navy Dongker Pekat Halus (Bottom-up) */}
           <svg
-            className="absolute bottom-0 w-full h-[380px]"
+            className="absolute bottom-0 w-full h-[450px]"
             viewBox="0 0 1440 320"
             preserveAspectRatio="none"
           >
             <path
-              fill="#60a5fa"
-              fillOpacity="0.18"
-              d="M0,224L60,202.7C120,181,240,139,360,133.3C480,128,600,160,720,186.7C840,213,960,235,1080,218.7C1200,203,1320,149,1380,122.7L1440,96V320H0Z"
+              fill="#00078F"
+              fillOpacity="0.15"
+              d="M0,224L60,245.3C120,267,240,309,360,314.7C480,320,600,288,720,261.3C840,235,960,213,1080,229.3C1200,245,1320,299,1380,325.3L1440,352V320H0Z"
             />
           </svg>
         </div>

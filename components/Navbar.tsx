@@ -22,28 +22,35 @@ const Navbar = () => {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [openProvinces, setOpenProvinces] = useState<Record<string, boolean>>(
+    {},
+  );
 
   const locationRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   // ===============================
-  // STATE UNTUK DETEKSI SCROLL
+  // LOGIC: TOGGLE PROVINSI
   // ===============================
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // ===============================
-  // STATE UNTUK DROPDOWN PROVINSI
-  // ===============================
-  const [openProvinces, setOpenProvinces] = useState<Record<string, boolean>>(
-    {},
-  );
-
   const toggleProvince = (province: string) => {
     setOpenProvinces((prev) => ({
       ...prev,
       [province]: !prev[province],
     }));
   };
+
+  // ===============================
+  // LOGIC: DETEKSI SCROLL (PUTIH ABSOLUT)
+  // ===============================
+  useEffect(() => {
+    const handleScroll = () => {
+      // Berubah jadi putih setelah scroll 50px
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -55,33 +62,18 @@ const Navbar = () => {
         setIsLocationOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // DETEKSI POSISI SCROLL HALAMAN
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 120);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleDetectLocation = async () => {
     setIsDetecting(true);
-
     try {
       await detectLocation();
       toast.success("Lokasi Terdeteksi");
       setIsLocationOpen(false);
     } catch (error) {
       console.error("Failed to detect location", error);
-
       toast.error(
         error instanceof Error && error.message === "Permission denied"
           ? "Izin lokasi ditolak. Aktifkan izin lokasi di pengaturan browser."
@@ -98,19 +90,21 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar-sticky  border-3xl shadow-[0_1px_2px_rgba(0,0,0,0.05)] ">
-      <div className="container mx-auto px-4 ">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+        isScrolled
+          ? "bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] border-b border-border"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-17 md:h-25">
           {/* Logo */}
           <div
             className="flex-shrink-0 mr-6 cursor-pointer"
             onClick={() => {
               if (isScrolled) {
-                window.scrollTo({
-                  top: 0,
-                  left: 0,
-                  behavior: "smooth",
-                });
+                window.scrollTo({ top: 0, behavior: "smooth" });
               } else {
                 router.push("/");
               }
@@ -121,7 +115,9 @@ const Navbar = () => {
               alt="FastCare.id"
               width={160}
               height={80}
-              className="h-14 md:h-20 w-auto object-contain"
+              className={`h-14 md:h-20 w-auto object-contain transition-all duration-300 ${
+                !isScrolled ? "brightness-0 invert" : ""
+              }`}
               priority
             />
           </div>
@@ -132,10 +128,9 @@ const Navbar = () => {
             <div className="relative" ref={locationRef}>
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
-                className="flex items-center space-x-2 px-4 py-3 rounded-xl border border-border hover:border-primary/50 transition-colors bg-card min-w-[200px]"
+                className="flex items-center space-x-2 px-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary/10 outline-none transition-colors min-w-[200px]"
               >
                 <i className="fa-solid fa-location-arrow text-primary" />
-
                 <span className="text-sm text-foreground truncate flex-1 text-left">
                   {selectedCity === "Lokasi Terdekat"
                     ? "Lokasi Terdekat"
@@ -143,17 +138,16 @@ const Navbar = () => {
                       ? "Semua Wilayah"
                       : selectedCity}
                 </span>
-
                 <i
-                  className={`fa-solid fa-chevron-down text-primary text-muted-foreground transition-transform duration-700 ${
+                  className={`fa-solid fa-chevron-down text-primary transition-transform duration-500 ${
                     isLocationOpen ? "rotate-180" : ""
                   }`}
                 />
               </button>
 
-              {/* Dropdown */}
+              {/* Dropdown Menu */}
               {isLocationOpen && (
-                <div className="absolute top-full left-0 mt-3 bg-card rounded-xl border border-border shadow-lg z-50 py-2 animate-scale-in">
+                <div className="absolute top-full left-0 mt-3 bg-white rounded-xl border border-border shadow-lg z-50 py-2 animate-scale-in w-72">
                   {/* Detect Location */}
                   <button
                     onClick={handleDetectLocation}
@@ -165,7 +159,6 @@ const Navbar = () => {
                         isDetecting ? "fa-spinner fa-spin" : "fa-street-view"
                       } text-primary w-5`}
                     />
-
                     <div>
                       <p className="text-sm font-medium text-foreground">
                         Lokasi Terdekat
@@ -178,7 +171,7 @@ const Navbar = () => {
 
                   <div className="border-t border-border my-2" />
 
-                  {/* All */}
+                  {/* All Regions */}
                   <button
                     onClick={() => handleCitySelect("Semua")}
                     className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${
@@ -192,37 +185,33 @@ const Navbar = () => {
 
                   <div className="border-t border-border my-2" />
 
-                  {/* Cities (Grouped + Collapsible per Province) */}
-                  <div className="max-h-60 overflow-y-auto">
+                  {/* Cities Grouped - scrollbar-hide applied here */}
+                  <div className="max-h-60 overflow-y-auto scrollbar-hide">
                     {Object.entries(INDONESIA_REGIONS).map(
                       ([province, cities]) => {
                         const isOpen = openProvinces[province];
-
                         return (
                           <div key={province}>
-                            {/* Province Header */}
                             <button
                               onClick={() => toggleProvince(province)}
                               className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-muted-foreground uppercase hover:bg-accent transition-colors"
                             >
                               <span>{province.replaceAll("_", " ")}</span>
-
                               <i
-                                className={`fa-solid fa-chevron-down transition-transform duration-300 ${
-                                  isOpen ? "rotate-180" : ""
-                                }`}
+                                className={`fa-solid fa-chevron-down transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                               />
                             </button>
 
-                            {/* Cities */}
                             {isOpen && (
-                              <div>
+                              <div className="bg-slate-50/50">
                                 {cities.map((city) => (
                                   <button
                                     key={city}
                                     onClick={() => handleCitySelect(city)}
                                     className={`w-full flex items-center space-x-3 px-6 py-2.5 hover:bg-accent transition-colors text-left ${
-                                      selectedCity === city ? "bg-accent" : ""
+                                      selectedCity === city
+                                        ? "bg-accent text-primary font-medium"
+                                        : ""
                                     }`}
                                   >
                                     <span className="text-sm text-foreground">
@@ -241,16 +230,15 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Search */}
+            {/* Search Input */}
             <div className="flex-1 relative">
-              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-
+              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                placeholder="Cari Layanan medis terdekat..."
+                placeholder="Cari Layanan medis..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-border focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-card text-sm"
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary/10 outline-none text-sm"
               />
             </div>
           </div>
@@ -261,27 +249,37 @@ const Navbar = () => {
               <>
                 <Link
                   href="/admin"
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
+                    isScrolled
+                      ? "text-primary hover:text-primary/80"
+                      : "text-white hover:text-white/80"
+                  }`}
                 >
                   <i className="fa-solid fa-sliders"></i>
-                  <span>Dashboard Admin</span>
+                  <span>Dashboard</span>
                 </Link>
-
                 <button
                   onClick={() => {
                     logout();
                     router.push("/");
                   }}
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className={`text-sm font-medium transition-colors ${
+                    isScrolled
+                      ? "text-muted-foreground hover:text-foreground"
+                      : "text-white/80 hover:text-white"
+                  }`}
                 >
-                  <i className="fa-solid fa-right-from-bracket" />
-                  <span>Logout</span>
+                  Logout
                 </button>
               </>
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 px-5 py-2.5 text-xl font-semibold text-muted-foreground hover:text-primary transition-colors"
+                className={`flex items-center gap-2 px-5 py-2.5 text-xl font-semibold transition-colors ${
+                  isScrolled
+                    ? "text-muted-foreground hover:text-primary"
+                    : "text-white hover:text-white/80"
+                }`}
               >
                 <i className="fa-regular fa-user"></i>
               </Link>
@@ -295,15 +293,14 @@ const Navbar = () => {
           >
             <div className="relative w-6 h-4">
               <span
-                className={`absolute w-full h-1 bg-foreground rounded transition-all duration-300 ease-in-out ${
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${
                   isMobileMenuOpen ? "rotate-45 top-1.5" : "top-0"
-                }`}
+                } ${isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
               />
-
               <span
-                className={`absolute w-full h-1 bg-foreground rounded transition-all duration-300 ease-in-out ${
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${
                   isMobileMenuOpen ? "-rotate-45 top-1.5" : "top-3"
-                }`}
+                } ${isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
               />
             </div>
           </button>
@@ -311,7 +308,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-[slideDown_0.45s_cubic-bezier(0.22,1,0.36,1)]">
+          <div className="md:hidden py-4 border-t border-border animate-slide-in scrollbar-hide bg-none">
             <div className="pt-2">
               {isAuthenticated ? (
                 <div className="space-y-2">
@@ -323,7 +320,6 @@ const Navbar = () => {
                     <i className="fa-solid fa-sliders"></i>
                     <span className="font-medium">Dashboard Admin</span>
                   </Link>
-
                   <button
                     onClick={() => {
                       logout();
@@ -340,7 +336,7 @@ const Navbar = () => {
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center space-x-2 px-4 py-3 bg-primary text-primary-foreground rounded-lg font-medium"
+                  className="flex items-center justify-center space-x-2 px-4 py-3 bg-primary text-white rounded-lg font-medium"
                 >
                   <i className="fa-solid fa-arrow-right-to-bracket"></i>
                   <span>Login</span>

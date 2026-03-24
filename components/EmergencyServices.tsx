@@ -4,12 +4,12 @@ import React from "react";
 
 const emergencyServices = [
   { icon: "fa-solid fa-truck-medical", label: "Ambulan", number: "119" },
-  { icon: "fa-solid fa-heart-crack", label: "Jiwa", number: "119 ext 8" },
+  { icon: "fa-solid fa-heart-crack", label: "Sejiwa", number: "119 ext 8" },
   { icon: "fa-solid fa-triangle-exclamation", label: "Darurat", number: "112" },
   { icon: "fa-solid fa-person-shelter", label: "PPA", number: "129" },
   { icon: "fa-solid fa-building-shield", label: "Polisi", number: "110" },
   { icon: "fa-solid fa-fire-extinguisher", label: "Damkar", number: "113" },
-  { icon: "fa-solid fa-road", label: "Tol", number: "14080" },
+  { icon: "fa-solid fa-road", label: "Jasa Marga", number: "14080" },
   { icon: "fa-solid fa-bolt", label: "PLN", number: "123" },
 ];
 
@@ -32,7 +32,7 @@ const EmergencyServices = () => {
                 href={`tel:${service.number.replace(/\s/g, "")}`}
                 className="flex flex-col items-center justify-between 
                            w-[95px] h-[115px] md:w-[105px] md:h-[125px] 
-                           bg-white rounded-2xl border border-gray-100 
+                           bg-white rounded-3xl border border-gray-100 
                            shadow-sm hover:shadow-lg hover:-translate-y-1 
                            transition-all duration-300 p-3"
               >
