@@ -105,76 +105,125 @@ const Footer = () => {
         </div>
       </footer>
 
-
-
       {/* DESKTOP FOOTER */}
-      <footer className="hidden md:block bg-[#1f1f1f] text-white border-t border-gray-700 mt-30">
-        <div className="max-w-7xl mx-auto px-8 py-16">
-          <div className="grid grid-cols-3 divide-x divide-white">
-            {/* BRAND */}
-            <div className="pr-10 space-y-4">
-              <Image
-                src="/logosigap_footer.png"
-                alt="FastCare Logo"
-                width={120}
-                height={40}
-                className="object-contain brightness-0 invert"
-              />
+      <footer className="hidden md:block relative bg-[#ffffff57] text-primary mt-30 overflow-hidden border border-gray">
+        {/* BIG WAVE BACKGROUND */}
+        <div className="absolute inset-0 -z-10">
+          {/* Wave belakang  */}
+          <svg
+            className="absolute bottom-0 w-full h-[320px]"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+          >
+            <path
+              fill="#3b82f6"
+              fillOpacity="0.12"
+              d="M0,160L80,181.3C160,203,320,245,480,250.7C640,256,800,224,960,192C1120,160,1280,128,1360,112L1440,96V320H0Z"
+            />
+          </svg>
 
-              <p className="text-sm text-white leading-relaxed">
-                Platform pencarian layanan kesehatan terdekat secara cepat,
-                praktis, dan akurat.
-              </p>
-            </div>
+          {/* Wave depan  */}
+          <svg
+            className="absolute bottom-0 w-full h-[380px]"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+          >
+            <path
+              fill="#60a5fa"
+              fillOpacity="0.18"
+              d="M0,224L60,202.7C120,181,240,139,360,133.3C480,128,600,160,720,186.7C840,213,960,235,1080,218.7C1200,203,1320,149,1380,122.7L1440,96V320H0Z"
+            />
+          </svg>
+        </div>
 
-            {/* BANTUAN */}
-            <div className="px-10 flex flex-col items-start space-y-4">
-              <h3 className="hover:text-white  transition-all uppercase tracking-[0.2em] text-[20px]">
-                INFORMASI
-                <div className="w-20 h-0.5 bg-yellow-400 mt-1" />{" "}
-                {/* GARIS BAWAH */}
+        <div className="max-w-7xl mx-auto px-8 py-24 relative z-10">
+          <div className="grid grid-cols-3 divide-x divide-foreground/30">
+            {/* INFORMASI */}
+            <div className="pr-10 flex flex-col items-start space-y-3">
+              <h3 className="uppercase text-[20px]">
+                Informasi
+                <div className="w-20 h-0.5 bg-foreground mt-1" />
               </h3>
 
               <button
                 onClick={() => openDialog("menu")}
-                className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
+                className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer"
               >
                 Bantuan
               </button>
 
               <button
                 onClick={() => openDialog("dukung")}
-                className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
+                className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer"
               >
                 Dukung Pengembangan
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Tentang Kami
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Kebijakan Privasi
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Syarat & Ketentuan
+              </button>
+            </div>
+
+            {/* LAYANAN */}
+            <div className="px-10 flex flex-col items-start space-y-3">
+              <h3 className="uppercase text-[20px]">
+                Layanan
+                <div className="w-20 h-0.5 bg-foreground mt-1" />
+              </h3>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Cari Rumah Sakit
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Klinik Terdekat
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Apotek 24 Jam
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Ambulans
+              </button>
+
+              <button className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer">
+                Layanan Darurat
               </button>
             </div>
 
             {/* KONTAK */}
-            <div className="pl-10 space-y-4">
-              <h3 className="hover:text-white transition-all uppercase tracking-[0.2em] text-[20px]">
+            <div className="pl-10 flex flex-col items-start space-y-3">
+              <h3 className="uppercase text-[20px]">
                 Kontak
-                <div className="w-20 h-0.5 bg-yellow-400 mt-1" />{" "}
-                {/* Garis Kuning */}
+                <div className="w-20 h-0.5 bg-foreground mt-1" />
               </h3>
 
               <div className="flex items-center gap-3">
-                <i className="fa-solid fa-envelope text-white" />
+                <i className="fa-solid fa-envelope text-primary" />
                 <a
                   href="mailto:info@fastcare.id"
-                  className="hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
+                  className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer"
                 >
-                  EMAIL
+                  Email
                 </a>
               </div>
 
               <div className="flex items-center gap-3">
-                <i className="fa-brands fa-whatsapp text-white" />
+                <i className="fa-brands fa-whatsapp text-primary" />
                 <a
                   href="https://wa.me/6283120996468"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className=" hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[14px]"
+                  className="hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all text-[14px] cursor-pointer"
                 >
                   Whatsapp
                 </a>
@@ -184,19 +233,19 @@ const Footer = () => {
         </div>
 
         {/* FOOTER PALING BAWAH */}
-        <div className="bg-[#161616]">
-          <div className="relative w-full px-20 py-2 flex items-center justify-center text-xs text-white">
-            {/* Sumber Data sekarang di kiri */}
+        <div className="bg-transparent">
+          <div className="relative w-full px-20 py-3 flex items-center justify-center text-[15px] text-foreground">
+            {/* Sumber Data */}
             <a
               href="https://sirs.kemkes.go.id"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute left-0 pl-8 hover:text-white hover:underline decoration-yellow-400 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[10px]"
+              className="absolute left-0 pl-8 hover:text-primary/70 hover:underline decoration-foreground underline-offset-8 transition-all uppercase tracking-[0.2em] text-[12px]"
             >
               Sumber Data: SIRS Kemkes RI
             </a>
 
-            {/* Copyright sekarang di tengah */}
+            {/* Copyright di tengah */}
             <span>
               Copyright © {new Date().getFullYear()} SIGAP. Semua hak
               dilindungi.
