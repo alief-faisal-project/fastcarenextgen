@@ -72,7 +72,7 @@ const TutorialModal = ({ image1, image2 }: TutorialModalProps) => {
         {step === 1 && (
           <>
             <h2 className="text-base sm:text-lg font-semibold mb-3">
-              Selamat Datang di FastCare
+              Selamat Datang di Sigap
             </h2>
 
             <Image
