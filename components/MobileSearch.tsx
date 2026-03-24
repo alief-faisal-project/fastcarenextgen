@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { toast } from "sonner";
-import { BANTEN_CITIES, BantenCity } from "@/types";
+import { INDONESIA_REGIONS, BantenCity } from "@/types";
 
 const MobileSearch = () => {
   const {
@@ -17,6 +17,20 @@ const MobileSearch = () => {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const locationRef = useRef<HTMLDivElement>(null);
+
+  // ===============================
+  // STATE UNTUK DROPDOWN PROVINSI
+  // ===============================
+  const [openProvinces, setOpenProvinces] = useState<Record<string, boolean>>(
+    {},
+  );
+
+  const toggleProvince = (province: string) => {
+    setOpenProvinces((prev) => ({
+      ...prev,
+      [province]: !prev[province],
+    }));
+  };
 
   // Tutup dropdown kalau klik di luar area
   useEffect(() => {
@@ -122,19 +136,50 @@ const MobileSearch = () => {
 
               <div className="border-t border-border my-2" />
 
-              {/* List kota */}
-              <div className="max-h-48 overflow-y-auto">
-                {BANTEN_CITIES.map((city) => (
-                  <button
-                    key={city}
-                    onClick={() => handleCitySelect(city)}
-                    className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${
-                      selectedCity === city ? "bg-accent" : ""
-                    }`}
-                  >
-                    <span className="text-sm text-foreground">{city}</span>
-                  </button>
-                ))}
+              {/* ===============================
+                  Cities (Grouped per Province - Mobile)
+              =============================== */}
+              <div className="max-h-60 overflow-y-auto">
+                {Object.entries(INDONESIA_REGIONS).map(([province, cities]) => {
+                  const isOpen = openProvinces[province];
+
+                  return (
+                    <div key={province}>
+                      {/* Province Header */}
+                      <button
+                        onClick={() => toggleProvince(province)}
+                        className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-muted-foreground uppercase hover:bg-accent transition-colors"
+                      >
+                        <span>{province.replaceAll("_", " ")}</span>
+
+                        <i
+                          className={`fa-solid fa-chevron-down transition-transform duration-300 ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {/* Cities */}
+                      {isOpen && (
+                        <div>
+                          {cities.map((city) => (
+                            <button
+                              key={city}
+                              onClick={() => handleCitySelect(city)}
+                              className={`w-full flex items-center space-x-3 px-6 py-2.5 hover:bg-accent transition-colors text-left ${
+                                selectedCity === city ? "bg-accent" : ""
+                              }`}
+                            >
+                              <span className="text-sm text-foreground">
+                                {city}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
