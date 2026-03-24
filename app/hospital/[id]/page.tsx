@@ -64,15 +64,17 @@ const HospitalDetail = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
-      {/* Breadcrumb */}
-      <div className="container mx-auto px-4 py-4">
-        <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-primary transition-colors">
-            Beranda
-          </Link>
-          <i className="fa-solid fa-chevron-right text-xs" />
-          <span className="text-foreground">{hospital.name}</span>
-        </nav>
+      {/* Breadcrumb / Back Button */}
+      <div className="container mx-auto px-4 py-6">
+        <Link
+          href="/"
+          className="group inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 ease-in-out"
+        >
+          <div className="flex h-7 w-7 items-center justify-center rounded-full border border-transparent group-hover:border-border group-hover:bg-secondary/50 transition-all">
+            <i className="fa-solid fa-chevron-left text-[10px]" />
+          </div>
+          <span>Kembali</span>
+        </Link>
       </div>
 
       {/* Main Content */}
@@ -99,7 +101,9 @@ const HospitalDetail = () => {
                 {hospital?.hasIGD && (
                   <div className="absolute top-0 right-0 z-10">
                     <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-bl-xl shadow-md text-center leading-tight">
-                      <span className="text-[20px] font-bold">TERSEDIA IGD 24 JAM</span>
+                      <span className="text-[20px] font-bold">
+                        TERSEDIA IGD 24 JAM
+                      </span>
                     </span>
                   </div>
                 )}
@@ -267,7 +271,9 @@ const HospitalDetail = () => {
             {hospital?.hasIGD && (
               <div className="absolute top-0 right-0 z-10">
                 <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-bl-xl shadow-md text-center leading-tight">
-                  <span className="text-[15px] font-bold">TERSEDIA IGD 24 JAM</span>
+                  <span className="text-[15px] font-bold">
+                    TERSEDIA IGD 24 JAM
+                  </span>
                 </span>
               </div>
             )}
