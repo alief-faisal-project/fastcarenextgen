@@ -81,7 +81,7 @@ const MobileSearch = () => {
             onClick={() => setIsLocationOpen(!isLocationOpen)}
             className="w-full flex items-center space-x-2 px-4 py-3 rounded-xl border border-border hover:border-primary/50 transition-colors bg-card"
           >
-            <i className="fa-solid fa-location-arrow text-primary" />
+            <i className="fa-solid fa-globe text-primary" />
 
             {/* Text lokasi yang tampil */}
             <span className="text-sm text-foreground truncate flex-1 text-left ">

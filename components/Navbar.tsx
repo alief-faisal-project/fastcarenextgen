@@ -138,7 +138,7 @@ const Navbar = () => {
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
                 className="flex items-center space-x-2 px-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary/10 outline-none transition-colors min-w-[200px]"
               >
-                <i className="fa-solid fa-location-arrow text-primary" />
+                <i className="fa-solid fa-globe text-primary" />
                 <span className="text-sm text-foreground truncate flex-1 text-left">
                   {selectedCity === "Lokasi Terdekat"
                     ? "Lokasi Terdekat"
@@ -313,8 +313,6 @@ const Navbar = () => {
             </div>
           </button>
         </div>
-
-        
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
