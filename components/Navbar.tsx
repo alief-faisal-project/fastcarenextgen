@@ -354,10 +354,10 @@ const Navbar = () => {
           >
             <div className="relative w-6 h-4">
               <span
-                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 top-1.5 bg-slate-600" : `top-0 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`}`}
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 top-1.5 bg-white" : `top-0 ${shouldBeSolid ? "bg-white" : "bg-white"}`}`}
               />
               <span
-                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 top-1.5 bg-slate-600" : `top-3 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`}`}
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 top-1.5 bg-white" : `top-3 ${shouldBeSolid ? "bg-white" : "bg-white"}`}`}
               />
             </div>
           </button>
@@ -366,17 +366,6 @@ const Navbar = () => {
         {/* Mobile Menu Content */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border animate-slide-in bg-white rounded-b-2xl shadow-xl px-2">
-            <form onSubmit={handleSearchSubmit} className="mb-4 relative px-2">
-              <input
-                type="text"
-                placeholder="Cari Rumah Sakit..."
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-slate-50 focus:ring-2 focus:ring-primary/10 outline-none text-sm"
-              />
-              <i className="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
-            </form>
-
             <div className="space-y-2 px-2">
               {isAuthenticated ? (
                 <>
@@ -407,7 +396,7 @@ const Navbar = () => {
                   className="flex items-center justify-center space-x-2 px-4 py-3 bg-primary text-white rounded-xl font-medium"
                 >
                   <i className="fa-solid fa-arrow-right-to-bracket"></i>
-                  <span>Login / Register</span>
+                  <span>Login</span>
                 </Link>
               )}
             </div>
