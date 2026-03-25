@@ -7,10 +7,9 @@ import { useApp } from "@/context/AppContext";
 const HeroBanner = () => {
   const { heroBanners } = useApp();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
 
   const mobileRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
-  const desktopIndicatorRef = useRef<HTMLDivElement>(null);
   const desktopTrackRef = useRef<HTMLDivElement | null>(null);
 
   const dragStartXRef = useRef<number | null>(null);
@@ -54,32 +53,27 @@ const HeroBanner = () => {
     dragDeltaRef.current = 0;
   };
 
+  // Logic Deteksi Index Mobile saat scroll
   useEffect(() => {
     const container = mobileRef.current;
-    const indicator = indicatorRef.current;
-    if (!container || !indicator) return;
-    const updateIndicator = () => {
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const progress = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
-      indicator.style.transform = `translate3d(${progress * (64 - 16)}px,0,0)`;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const width = container.clientWidth * 0.85; // Sesuai w-[85%]
+      const newIndex = Math.round(scrollLeft / width);
+      setMobileActiveIndex(newIndex);
     };
-    container.addEventListener("scroll", updateIndicator, { passive: true });
-    return () => container.removeEventListener("scroll", updateIndicator);
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
   }, [activeBanners.length]);
 
-  useEffect(() => {
-    const indicator = desktopIndicatorRef.current;
-    if (!indicator) return;
-    const progress = maxDesktopSlide > 0 ? currentSlide / maxDesktopSlide : 0;
-    indicator.style.transform = `translate3d(${progress * (64 - 28)}px,0,0)`;
-  }, [currentSlide, maxDesktopSlide]);
-
   return (
-    // pt-20/pt-32 dipertahankan agar konten tidak tertutup fixed navbar
     <section className="relative pt-20 md:pt-32 pb-4 overflow-hidden">
-      {/* BACKGROUND GRADASI NAVY PEKAT (#00078F) -> TRANSPARENT */}
+      {/* BACKGROUND GRADASI */}
       <div
-        className=" absolute top-0 left-0 w-full h-full -z-10 pointer-events-none"
+        className="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none"
         style={{
           background:
             "linear-gradient(180deg, #00078F 0%, rgba(0, 7, 143, 0.4) 60%, rgba(255, 255, 255, 0) 100%)",
@@ -88,7 +82,6 @@ const HeroBanner = () => {
 
       {/* DESKTOP ONLY WAVES */}
       <div className="hidden md:block absolute top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
-        {/* Wave belakang - Navy Soft */}
         <svg
           className="absolute top-[-120px] w-full h-[600px]"
           viewBox="0 0 1440 320"
@@ -101,7 +94,6 @@ const HeroBanner = () => {
           />
         </svg>
 
-        {/* Wave depan - Navy Dongker Pekat Halus */}
         <svg
           className="absolute top-[-100px] w-full h-[650px]"
           viewBox="0 0 1440 320"
@@ -135,7 +127,7 @@ const HeroBanner = () => {
                     <a
                       key={banner.id}
                       href={banner.link || "#"}
-                      className="flex-shrink-0 w-[calc(33.333%-11px)] rounded-3xl overflow-hidden relative shadow-xl transition-transform hover:scale-[1.02]"
+                      className="flex-shrink-0 w-[calc(33.333%-11px)] rounded-3xl overflow-hidden relative shadow-xl"
                     >
                       <div className="aspect-[2/1] relative">
                         <Image
@@ -167,22 +159,27 @@ const HeroBanner = () => {
                   </>
                 )}
               </div>
-              {/* DESKTOP INDICATOR (Pill/Scroll Style) */}
-              {activeBanners.length > 1 && (
-                <div className="flex items-center justify-center mt-6">
-                  <div className="relative w-16 h-4 rounded-full bg-card overflow-hidden border border-white/10">
+
+              {/* DESKTOP INDICATOR (Pill Active, Circle Inactive) */}
+              {activeBanners.length > 3 && (
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  {Array.from({ length: maxDesktopSlide + 1 }).map((_, idx) => (
                     <div
-                      ref={desktopIndicatorRef}
-                      className="absolute top-0 left-0 h-full w-7 rounded-full bg-primary will-change-transform shadow-sm"
+                      key={idx}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        currentSlide === idx
+                          ? "w-8 bg-primary shadow-sm"
+                          : "w-2 bg-slate-300"
+                      }`}
                     />
-                  </div>
+                  ))}
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* ================= MOBILE (Clean Gradasi, No Wave) ================= */}
+        {/* ================= MOBILE ================= */}
         {activeBanners.length > 0 && (
           <div className="md:hidden px-4 pt-1">
             <div
@@ -206,15 +203,20 @@ const HeroBanner = () => {
                 </a>
               ))}
             </div>
-            {/* MOBILE INDICATOR (Hapus Celah Putih dengan pt-1, pertahankan w-12/bg-white/30) */}
+
+            {/* MOBILE INDICATOR (Pill Active, Circle Inactive) */}
             {activeBanners.length > 1 && (
-              <div className="flex items-center justify-center mt-4">
-                <div className="relative w-12 h-2 rounded-full bg-card overflow-hidden">
+              <div className="flex items-center justify-center gap-1.5 mt-5">
+                {activeBanners.map((_, idx) => (
                   <div
-                    ref={indicatorRef}
-                    className="absolute top-0 left-0 h-full w-4 rounded-full bg-primary will-change-transform"
+                    key={idx}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      mobileActiveIndex === idx
+                        ? "w-6 bg-primary"
+                        : "w-1.5 bg-slate-300"
+                    }`}
                   />
-                </div>
+                ))}
               </div>
             )}
           </div>

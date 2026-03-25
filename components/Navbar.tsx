@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation"; // Tambahkan usePathname
 import { INDONESIA_REGIONS, BantenCity } from "@/types";
 import { toast } from "sonner";
 
@@ -29,6 +29,14 @@ const Navbar = () => {
 
   const locationRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname(); // Ambil route saat ini
+
+  // Logic: Cek apakah halaman saat ini adalah hospital
+  const isHospitalPage = pathname?.startsWith("/hospital");
+
+  // Penentu apakah navbar harus tampil solid putih
+  // Navbar jadi putih jika: sedang discroll ATAU berada di halaman hospital
+  const shouldBeSolid = isScrolled || isHospitalPage;
 
   // ===============================
   // LOGIC: TOGGLE PROVINSI
@@ -92,7 +100,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
-        isScrolled
+        shouldBeSolid
           ? "bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] border-b border-border"
           : "bg-transparent"
       }`}
@@ -103,7 +111,7 @@ const Navbar = () => {
           <div
             className="flex-shrink-0 mr-6 cursor-pointer"
             onClick={() => {
-              if (isScrolled) {
+              if (shouldBeSolid && !isHospitalPage) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               } else {
                 router.push("/");
@@ -116,7 +124,7 @@ const Navbar = () => {
               width={160}
               height={80}
               className={`h-14 md:h-20 w-auto object-contain transition-all duration-300 ${
-                !isScrolled ? "brightness-0 invert" : ""
+                !shouldBeSolid ? "brightness-0 invert" : ""
               }`}
               priority
             />
@@ -185,7 +193,7 @@ const Navbar = () => {
 
                   <div className="border-t border-border my-2" />
 
-                  {/* Cities Grouped - scrollbar-hide applied here */}
+                  {/* Cities Grouped */}
                   <div className="max-h-60 overflow-y-auto scrollbar-hide">
                     {Object.entries(INDONESIA_REGIONS).map(
                       ([province, cities]) => {
@@ -250,7 +258,7 @@ const Navbar = () => {
                 <Link
                   href="/admin"
                   className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
+                    shouldBeSolid
                       ? "text-primary hover:text-primary/80"
                       : "text-white hover:text-white/80"
                   }`}
@@ -264,7 +272,7 @@ const Navbar = () => {
                     router.push("/");
                   }}
                   className={`text-sm font-medium transition-colors ${
-                    isScrolled
+                    shouldBeSolid
                       ? "text-muted-foreground hover:text-foreground"
                       : "text-white/80 hover:text-white"
                   }`}
@@ -276,7 +284,7 @@ const Navbar = () => {
               <Link
                 href="/login"
                 className={`flex items-center gap-2 px-5 py-2.5 text-xl font-semibold transition-colors ${
-                  isScrolled
+                  shouldBeSolid
                     ? "text-muted-foreground hover:text-primary"
                     : "text-white hover:text-white/80"
                 }`}
@@ -295,12 +303,12 @@ const Navbar = () => {
               <span
                 className={`absolute w-full h-1 rounded transition-all duration-300 ${
                   isMobileMenuOpen ? "rotate-45 top-1.5" : "top-0"
-                } ${isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
+                } ${shouldBeSolid || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
               />
               <span
                 className={`absolute w-full h-1 rounded transition-all duration-300 ${
                   isMobileMenuOpen ? "-rotate-45 top-1.5" : "top-3"
-                } ${isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
+                } ${shouldBeSolid || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
               />
             </div>
           </button>
