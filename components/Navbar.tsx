@@ -15,14 +15,12 @@ const Navbar = () => {
     detectLocation,
     isAuthenticated,
     logout,
-    // searchQuery global tetap ada untuk digunakan saat "Enter"
     setSearchQuery,
     hospitals,
   } = useApp();
 
-  // LOGIC: Local State untuk input agar tidak langsung memfilter HospitalCard
+  // State Lokal untuk input agar HospitalCard tidak langsung terfilter saat mengetik
   const [localSearch, setLocalSearch] = useState("");
-
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
@@ -33,7 +31,7 @@ const Navbar = () => {
   );
 
   const locationRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null); // Ref untuk area pencarian
   const router = useRouter();
   const pathname = usePathname();
 
@@ -41,7 +39,7 @@ const Navbar = () => {
   const shouldBeSolid = isScrolled || isHospitalPage;
 
   // ===============================
-  // LOGIC: SUGGESTIONS (Berdasarkan Local State)
+  // LOGIC: SUGGESTIONS
   // ===============================
   const suggestions = useMemo(() => {
     if (!localSearch || localSearch.length < 1) return [];
@@ -51,14 +49,13 @@ const Navbar = () => {
   }, [localSearch, hospitals]);
 
   // ===============================
-  // LOGIC: SUBMIT SEARCH (Trigger saat Enter)
+  // LOGIC: SUBMIT SEARCH (Enter Key)
   // ===============================
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setSearchQuery(localSearch); // Update global state hanya saat Enter/Submit
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchQuery(localSearch); // Update global state hanya saat Enter
     setShowSuggestions(false);
 
-    // Jika tidak di homepage, arahkan ke home agar hasil pencarian terlihat
     if (pathname !== "/") {
       router.push("/");
     }
@@ -90,12 +87,14 @@ const Navbar = () => {
   // ===============================
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Tutup Dropdown Lokasi
       if (
         locationRef.current &&
         !locationRef.current.contains(event.target as Node)
       ) {
         setIsLocationOpen(false);
       }
+      // Tutup Saran Pencarian
       if (
         searchRef.current &&
         !searchRef.current.contains(event.target as Node)
@@ -117,8 +116,8 @@ const Navbar = () => {
       console.error("Failed to detect location", error);
       toast.error(
         error instanceof Error && error.message === "Permission denied"
-          ? "Izin lokasi ditolak. Aktifkan izin lokasi di pengaturan browser."
-          : "Gagal mendeteksi lokasi. Coba lagi.",
+          ? "Izin lokasi ditolak."
+          : "Gagal mendeteksi lokasi.",
       );
     } finally {
       setIsDetecting(false);
@@ -133,7 +132,7 @@ const Navbar = () => {
   const handleSuggestionClick = (hospitalId: string) => {
     router.push(`/hospital/${hospitalId}`);
     setShowSuggestions(false);
-    setLocalSearch(""); // Clear input setelah navigasi
+    setLocalSearch("");
   };
 
   return (
@@ -171,7 +170,7 @@ const Navbar = () => {
 
           {/* Desktop: Location & Search */}
           <div className="hidden md:flex items-center gap-4 flex-1 max-w-3xl mx-6">
-            {/* Location Dropdown */}
+            {/* 1. Location Dropdown */}
             <div className="relative" ref={locationRef}>
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
@@ -186,9 +185,7 @@ const Navbar = () => {
                       : selectedCity}
                 </span>
                 <i
-                  className={`fa-solid fa-chevron-down text-primary transition-transform duration-500 ${
-                    isLocationOpen ? "rotate-180" : ""
-                  }`}
+                  className={`fa-solid fa-chevron-down text-primary transition-transform duration-500 ${isLocationOpen ? "rotate-180" : ""}`}
                 />
               </button>
 
@@ -214,9 +211,7 @@ const Navbar = () => {
                   <div className="border-t border-border my-2" />
                   <button
                     onClick={() => handleCitySelect("Semua")}
-                    className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${
-                      selectedCity === "Semua" ? "bg-accent" : ""
-                    }`}
+                    className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${selectedCity === "Semua" ? "bg-accent" : ""}`}
                   >
                     <span className="text-sm text-foreground">
                       Semua Wilayah
@@ -244,11 +239,7 @@ const Navbar = () => {
                                   <button
                                     key={city}
                                     onClick={() => handleCitySelect(city)}
-                                    className={`w-full flex items-center space-x-3 px-6 py-2.5 hover:bg-accent transition-colors text-left ${
-                                      selectedCity === city
-                                        ? "bg-accent text-primary font-medium"
-                                        : ""
-                                    }`}
+                                    className={`w-full flex items-center space-x-3 px-6 py-2.5 hover:bg-accent transition-colors text-left ${selectedCity === city ? "bg-accent text-primary font-medium" : ""}`}
                                   >
                                     <span className="text-sm text-foreground">
                                       {city}
@@ -266,38 +257,36 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Search Input Area */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex-1 relative"
-              ref={searchRef}
-            >
-              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Cari Rumah Sakit Terdekat..."
-                value={localSearch}
-                onFocus={() => setShowSuggestions(true)}
-                onChange={(e) => {
-                  setLocalSearch(e.target.value);
-                  setShowSuggestions(true);
-                }}
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary/10 outline-none text-sm"
-              />
+            {/* 2. Search Area (Fix Ref & Logic) */}
+            <div className="flex-1 relative" ref={searchRef}>
+              <form onSubmit={handleSearchSubmit}>
+                <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Cari Rumah Sakit Terdekat..."
+                  value={localSearch}
+                  onFocus={() => setShowSuggestions(true)}
+                  onChange={(e) => {
+                    setLocalSearch(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary/10 outline-none text-sm"
+                />
+              </form>
 
               {/* Suggestions Dropdown */}
               {showSuggestions && suggestions && suggestions.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-border shadow-2xl z-[110] overflow-hidden animate-scale-in">
                   <div className="px-4 py-2.5 bg-slate-50 border-b border-border">
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                     Menampilkan hasil pencarian
+                      Menampilkan hasil pencarian
                     </span>
                   </div>
                   <div className="max-h-[380px] overflow-y-auto scrollbar-hide">
                     {suggestions.map((hospital) => (
                       <button
                         key={hospital.id}
-                        type="button" // Agar tidak mentrigger form submit saat klik suggestion
+                        type="button"
                         onClick={() => handleSuggestionClick(hospital.id)}
                         className="w-full flex items-center gap-4 px-4 py-3 hover:bg-blue-50/50 transition-all text-left group border-b border-slate-50 last:border-0"
                       >
@@ -317,13 +306,13 @@ const Navbar = () => {
                             {hospital.address}
                           </p>
                         </div>
-                        <i className="fa-solid fa-arrow-right text-[10px] text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all pr-2"></i>
+                        <i className="fa-solid fa-chevron-right text-[10px] text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all pr-2"></i>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
-            </form>
+            </div>
           </div>
 
           {/* Desktop Auth */}
@@ -332,11 +321,7 @@ const Navbar = () => {
               <>
                 <Link
                   href="/admin"
-                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
-                    shouldBeSolid
-                      ? "text-primary hover:text-primary/80"
-                      : "text-white hover:text-white/90"
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${shouldBeSolid ? "text-primary hover:text-primary/80" : "text-white hover:text-white/90"}`}
                 >
                   <i className="fa-solid fa-sliders"></i>
                   <span>Dashboard</span>
@@ -347,11 +332,7 @@ const Navbar = () => {
                     router.push("/");
                   }}
                   title="Logout"
-                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
-                    shouldBeSolid
-                      ? "text-primary hover:text-primary/80 cursor-pointer"
-                      : "text-white hover:text-white/90 cursor-pointer"
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${shouldBeSolid ? "text-primary hover:text-primary/80 cursor-pointer" : "text-white hover:text-white/90 cursor-pointer"}`}
                 >
                   <i className="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
@@ -359,11 +340,7 @@ const Navbar = () => {
             ) : (
               <Link
                 href="/login"
-                className={`flex items-center gap-2 px-5 py-2.5 text-xl font-semibold transition-colors ${
-                  shouldBeSolid
-                    ? "text-muted-foreground hover:text-primary"
-                    : "text-white hover:text-white/80"
-                }`}
+                className={`flex items-center gap-2 px-5 py-2.5 text-xl font-semibold transition-colors ${shouldBeSolid ? "text-muted-foreground hover:text-primary" : "text-white hover:text-white/80"}`}
               >
                 <i className="fa-regular fa-user"></i>
               </Link>
@@ -377,24 +354,16 @@ const Navbar = () => {
           >
             <div className="relative w-6 h-4">
               <span
-                className={`absolute w-full h-1 rounded transition-all duration-300 ${
-                  isMobileMenuOpen
-                    ? "rotate-45 top-1.5 bg-slate-600"
-                    : `top-0 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`
-                }`}
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 top-1.5 bg-slate-600" : `top-0 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`}`}
               />
               <span
-                className={`absolute w-full h-1 rounded transition-all duration-300 ${
-                  isMobileMenuOpen
-                    ? "-rotate-45 top-1.5 bg-slate-600"
-                    : `top-3 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`
-                }`}
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 top-1.5 bg-slate-600" : `top-3 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`}`}
               />
             </div>
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Content */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border animate-slide-in bg-white rounded-b-2xl shadow-xl px-2">
             <form onSubmit={handleSearchSubmit} className="mb-4 relative px-2">
