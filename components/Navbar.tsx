@@ -331,7 +331,7 @@ const Navbar = () => {
                     logout();
                     router.push("/");
                   }}
-                  title="Logout"
+                  title="Logout" // Tooltip Logout sudah ada
                   className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${shouldBeSolid ? "text-primary hover:text-primary/80 cursor-pointer" : "text-white hover:text-white/90 cursor-pointer"}`}
                 >
                   <i className="fa-solid fa-arrow-right-from-bracket"></i>
@@ -340,6 +340,7 @@ const Navbar = () => {
             ) : (
               <Link
                 href="/login"
+                title="Login" // Tambahkan ini agar sama dengan Logout
                 className={`flex items-center gap-2 px-5 py-2.5 text-xl font-semibold transition-colors ${shouldBeSolid ? "text-muted-foreground hover:text-primary" : "text-white hover:text-white/80"}`}
               >
                 <i className="fa-regular fa-user"></i>
