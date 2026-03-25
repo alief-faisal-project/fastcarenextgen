@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const emergencyServices = [
   { icon: "fa-solid fa-truck-medical", label: "Ambulan", number: "119" },
@@ -14,14 +14,40 @@ const emergencyServices = [
 ];
 
 const EmergencyServices = () => {
+  const [showTooltip, setShowTooltip] = useState(true);
+
+  useEffect(() => {
+    // Timer untuk menyembunyikan tooltip setelah 3 detik
+    const timer = setTimeout(() => {
+      setShowTooltip(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    // Section utama dengan background PUTIH penuh
     <section className="bg-white py-8 md:py-12 border-t border-gray-100">
       <div className="container mx-auto px-4">
+        {/* Header Area */}
+        <div className="flex items-center justify-between mb-4 px-1">
+          <span className="text-[12px] md:text-[15px] font-bold text-gray-500 uppercase tracking-widest">
+            Nomor Layanan Darurat
+          </span>
+
+          {/* Tooltip Clean: Muncul 3 detik lalu Fade Out */}
+          <div
+            className={`md:hidden mt-1 transition-opacity duration-1000 ${
+              showTooltip ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <span className="text-[10px] text-gray-400 italic flex items-center gap-1.5">
+              <i className="fa-solid fa-arrow-right-long animate-pulse" />
+              geser untuk melihat nomor lainnya
+            </span>
+          </div>
+        </div>
 
         {/* Wrapper untuk Grid/Scroll */}
-        {/* Mobile: Scroll ke samping (justify-start) */}
-        {/* Desktop (md+): Rata Tengah (justify-center) & No Scroll */}
         <div
           className="flex md:flex-wrap gap-4 overflow-x-auto md:overflow-visible justify-start md:justify-center pb-4 md:pb-0 scrollbar-hide"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -36,12 +62,10 @@ const EmergencyServices = () => {
                            shadow-sm hover:shadow-lg hover:-translate-y-1 
                            transition-all duration-300 p-3"
               >
-                {/* Ikon dengan Background Lingkaran Biru Muda (Soft Blue) */}
                 <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
                   <i className={`${service.icon} text-primary text-xl`} />
                 </div>
 
-                {/* Container Teks (Label & Nomor) */}
                 <div className="flex flex-col items-center text-center mt-auto w-full">
                   <span className="text-[10px] md:text-[11px] font-medium text-gray-700 leading-tight line-clamp-2">
                     {service.label}

@@ -166,10 +166,10 @@ const HeroBanner = () => {
                   {Array.from({ length: maxDesktopSlide + 1 }).map((_, idx) => (
                     <div
                       key={idx}
-                      className={`h-2 rounded-full transition-all duration-300 ${
+                      className={`h-3 rounded-full transition-all duration-300 ${
                         currentSlide === idx
                           ? "w-8 bg-primary shadow-sm"
-                          : "w-2 bg-slate-300"
+                          : "w-3 bg-slate-300"
                       }`}
                     />
                   ))}
@@ -190,7 +190,7 @@ const HeroBanner = () => {
                 <a
                   key={banner.id}
                   href={banner.link || "#"}
-                  className="flex-shrink-0 w-[85%] rounded-2xl overflow-hidden relative shadow-lg snap-center"
+                  className="flex-shrink-0 w-[49%] rounded-2xl overflow-hidden relative shadow-lg snap-center"
                 >
                   <div className="aspect-[2/1] relative">
                     <Image
@@ -210,10 +210,10 @@ const HeroBanner = () => {
                 {activeBanners.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                    className={`h-2 rounded-full transition-all duration-300 ${
                       mobileActiveIndex === idx
                         ? "w-6 bg-primary"
-                        : "w-1.5 bg-slate-300"
+                        : "w-2 bg-slate-300"
                     }`}
                   />
                 ))}

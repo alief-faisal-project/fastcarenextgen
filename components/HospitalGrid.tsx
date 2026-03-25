@@ -64,10 +64,10 @@ const HospitalGrid = () => {
   return (
     <section className="container mx-auto px-4 py-6" id="hospitals">
       {/* Header Section */}
-      <div className="mb-4">
-        <h2 className="text-xl md:text-2xl font-bold text-foreground font-heading">
+      <div className="mb-8">
+        <h2 className="text-[15px] md:text-[25px] font-bold text-foreground font-heading">
           {selectedCity === "Semua"
-            ? "Temukan Rumah Sakit Terdekat"
+            ? "Temukan Layanan Kesehatan Terdekat"
             : selectedCity === "Lokasi Terdekat"
               ? "Rumah Sakit Terdekat"
               : `Rumah Sakit di ${selectedCity}`}
