@@ -22,7 +22,7 @@ const LoadingScreen = ({ onLoadComplete }: { onLoadComplete?: () => void }) => {
         }
         return prev + 1;
       });
-    }, 300); // Kecepatan muncul antar potongan (500ms)
+    }, 200); // Kecepatan muncul antar potongan (500ms)
 
     return () => clearInterval(interval);
   }, [onLoadComplete]);
