@@ -260,7 +260,7 @@ const Navbar = () => {
                   className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
                     shouldBeSolid
                       ? "text-primary hover:text-primary/80"
-                      : "text-white hover:text-white/80"
+                      : "text-white hover:text-white/90"
                   }`}
                 >
                   <i className="fa-solid fa-sliders"></i>
@@ -273,8 +273,8 @@ const Navbar = () => {
                   }}
                   className={`text-sm font-medium transition-colors ${
                     shouldBeSolid
-                      ? "text-muted-foreground hover:text-foreground"
-                      : "text-white/80 hover:text-white"
+                      ? "text-primary hover:text-primary/80 cursor-pointer"
+                      : "text-white hover:text-white/90 cursor-pointer"
                   }`}
                 >
                   Logout
@@ -303,16 +303,18 @@ const Navbar = () => {
               <span
                 className={`absolute w-full h-1 rounded transition-all duration-300 ${
                   isMobileMenuOpen ? "rotate-45 top-1.5" : "top-0"
-                } ${shouldBeSolid || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
+                } ${shouldBeSolid || isMobileMenuOpen ? "bg-white" : "bg-white"}`}
               />
               <span
                 className={`absolute w-full h-1 rounded transition-all duration-300 ${
                   isMobileMenuOpen ? "-rotate-45 top-1.5" : "top-3"
-                } ${shouldBeSolid || isMobileMenuOpen ? "bg-foreground" : "bg-white"}`}
+                } ${shouldBeSolid || isMobileMenuOpen ? "bg-white" : "bg-white"}`}
               />
             </div>
           </button>
         </div>
+
+        
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
