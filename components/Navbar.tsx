@@ -169,7 +169,7 @@ const Navbar = () => {
                     />
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        Lokasi Terdekat
+                        Temukan Lokasi Terdekat
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Deteksi lokasi perangkat
