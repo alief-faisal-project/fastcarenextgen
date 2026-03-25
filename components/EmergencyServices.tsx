@@ -12,7 +12,6 @@ const emergencyServices = [
   { icon: "fa-solid fa-road", label: "Jasa Marga", number: "14080" },
   { icon: "fa-solid fa-bolt", label: "PLN", number: "123" },
   { icon: "fa-solid fa-life-ring", label: "SAR/Basarnas", number: "115" },
-  { icon: "fa-solid fa-headset", label: "Halo Kemenkes", number: "1500567" },
 ];
 
 const EmergencyServices = () => {
@@ -33,7 +32,7 @@ return (
       {/* Header Area */}
       <div className="flex items-center justify-between mb-4 px-1">
         <span className="text-[12px] md:text-[15px] font-bold text-gray-500 uppercase tracking-widest">
-          Nomor Layanan Darurat
+          Layanan Darurat
         </span>
       </div>
 
