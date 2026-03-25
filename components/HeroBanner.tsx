@@ -80,10 +80,12 @@ const HeroBanner = () => {
         }}
       />
 
-      {/* DESKTOP ONLY WAVES */}
-      <div className="hidden md:block absolute top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+      {/* RESPONSIVE WAVES (Mobile & Desktop) */}
+      <div className="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden">
+        {/* Wave 1 */}
         <svg
-          className="absolute top-[-120px] w-full h-[600px]"
+          /* h-[300px] untuk mobile, md:h-[600px] untuk desktop */
+          className="absolute top-[-50px] md:top-[-120px] w-full h-[300px] md:h-[600px]"
           viewBox="0 0 1440 320"
           preserveAspectRatio="none"
         >
@@ -94,8 +96,10 @@ const HeroBanner = () => {
           />
         </svg>
 
+        {/* Wave 2 */}
         <svg
-          className="absolute top-[-100px] w-full h-[650px]"
+          /* h-[350px] untuk mobile, md:h-[650px] untuk desktop */
+          className="absolute top-[-40px] md:top-[-100px] w-full h-[350px] md:h-[650px]"
           viewBox="0 0 1440 320"
           preserveAspectRatio="none"
         >
