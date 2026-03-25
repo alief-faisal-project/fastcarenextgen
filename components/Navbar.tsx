@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useApp } from "@/context/AppContext";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation"; // Tambahkan usePathname
+import { useRouter, usePathname } from "next/navigation";
 import { INDONESIA_REGIONS, BantenCity } from "@/types";
 import { toast } from "sonner";
 
@@ -15,28 +15,54 @@ const Navbar = () => {
     detectLocation,
     isAuthenticated,
     logout,
-    searchQuery,
+    // searchQuery global tetap ada untuk digunakan saat "Enter"
     setSearchQuery,
+    hospitals,
   } = useApp();
+
+  // LOGIC: Local State untuk input agar tidak langsung memfilter HospitalCard
+  const [localSearch, setLocalSearch] = useState("");
 
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [openProvinces, setOpenProvinces] = useState<Record<string, boolean>>(
     {},
   );
 
   const locationRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const pathname = usePathname(); // Ambil route saat ini
+  const pathname = usePathname();
 
-  // Logic: Cek apakah halaman saat ini adalah hospital
   const isHospitalPage = pathname?.startsWith("/hospital");
-
-  // Penentu apakah navbar harus tampil solid putih
-  // Navbar jadi putih jika: sedang discroll ATAU berada di halaman hospital
   const shouldBeSolid = isScrolled || isHospitalPage;
+
+  // ===============================
+  // LOGIC: SUGGESTIONS (Berdasarkan Local State)
+  // ===============================
+  const suggestions = useMemo(() => {
+    if (!localSearch || localSearch.length < 1) return [];
+    return hospitals
+      ?.filter((h) => h.name.toLowerCase().includes(localSearch.toLowerCase()))
+      .slice(0, 6);
+  }, [localSearch, hospitals]);
+
+  // ===============================
+  // LOGIC: SUBMIT SEARCH (Trigger saat Enter)
+  // ===============================
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSearchQuery(localSearch); // Update global state hanya saat Enter/Submit
+    setShowSuggestions(false);
+
+    // Jika tidak di homepage, arahkan ke home agar hasil pencarian terlihat
+    if (pathname !== "/") {
+      router.push("/");
+    }
+  };
 
   // ===============================
   // LOGIC: TOGGLE PROVINSI
@@ -49,18 +75,19 @@ const Navbar = () => {
   };
 
   // ===============================
-  // LOGIC: DETEKSI SCROLL (PUTIH ABSOLUT)
+  // LOGIC: DETEKSI SCROLL
   // ===============================
   useEffect(() => {
     const handleScroll = () => {
-      // Berubah jadi putih setelah scroll 50px
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // ===============================
+  // LOGIC: CLICK OUTSIDE
+  // ===============================
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -68,6 +95,12 @@ const Navbar = () => {
         !locationRef.current.contains(event.target as Node)
       ) {
         setIsLocationOpen(false);
+      }
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -95,6 +128,12 @@ const Navbar = () => {
   const handleCitySelect = (city: BantenCity | "Semua") => {
     setSelectedCity(city);
     setIsLocationOpen(false);
+  };
+
+  const handleSuggestionClick = (hospitalId: string) => {
+    router.push(`/hospital/${hospitalId}`);
+    setShowSuggestions(false);
+    setLocalSearch(""); // Clear input setelah navigasi
   };
 
   return (
@@ -153,19 +192,15 @@ const Navbar = () => {
                 />
               </button>
 
-              {/* Dropdown Menu */}
               {isLocationOpen && (
                 <div className="absolute top-full left-0 mt-3 bg-white rounded-xl border border-border shadow-lg z-50 py-2 animate-scale-in w-72">
-                  {/* Detect Location */}
                   <button
                     onClick={handleDetectLocation}
                     disabled={isDetecting}
                     className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-accent transition-colors text-left"
                   >
                     <i
-                      className={`fa-solid ${
-                        isDetecting ? "fa-spinner fa-spin" : "fa-street-view"
-                      } text-primary w-5`}
+                      className={`fa-solid ${isDetecting ? "fa-spinner fa-spin" : "fa-street-view"} text-primary w-5`}
                     />
                     <div>
                       <p className="text-sm font-medium text-foreground">
@@ -176,10 +211,7 @@ const Navbar = () => {
                       </p>
                     </div>
                   </button>
-
                   <div className="border-t border-border my-2" />
-
-                  {/* All Regions */}
                   <button
                     onClick={() => handleCitySelect("Semua")}
                     className={`w-full flex items-center space-x-3 px-4 py-2.5 hover:bg-accent transition-colors text-left ${
@@ -190,10 +222,7 @@ const Navbar = () => {
                       Semua Wilayah
                     </span>
                   </button>
-
                   <div className="border-t border-border my-2" />
-
-                  {/* Cities Grouped */}
                   <div className="max-h-60 overflow-y-auto scrollbar-hide">
                     {Object.entries(INDONESIA_REGIONS).map(
                       ([province, cities]) => {
@@ -209,7 +238,6 @@ const Navbar = () => {
                                 className={`fa-solid fa-chevron-down transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                               />
                             </button>
-
                             {isOpen && (
                               <div className="bg-slate-50/50">
                                 {cities.map((city) => (
@@ -238,17 +266,64 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Search Input */}
-            <div className="flex-1 relative">
+            {/* Search Input Area */}
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex-1 relative"
+              ref={searchRef}
+            >
               <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                placeholder="Cari Layanan medis Terdekat..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari Rumah Sakit Terdekat..."
+                value={localSearch}
+                onFocus={() => setShowSuggestions(true)}
+                onChange={(e) => {
+                  setLocalSearch(e.target.value);
+                  setShowSuggestions(true);
+                }}
                 className="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary/10 outline-none text-sm"
               />
-            </div>
+
+              {/* Suggestions Dropdown */}
+              {showSuggestions && suggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-border shadow-2xl z-[110] overflow-hidden animate-scale-in">
+                  <div className="px-4 py-2.5 bg-slate-50 border-b border-border">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                     Menampilkan hasil pencarian
+                    </span>
+                  </div>
+                  <div className="max-h-[380px] overflow-y-auto scrollbar-hide">
+                    {suggestions.map((hospital) => (
+                      <button
+                        key={hospital.id}
+                        type="button" // Agar tidak mentrigger form submit saat klik suggestion
+                        onClick={() => handleSuggestionClick(hospital.id)}
+                        className="w-full flex items-center gap-4 px-4 py-3 hover:bg-blue-50/50 transition-all text-left group border-b border-slate-50 last:border-0"
+                      >
+                        <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100 shadow-sm">
+                          <Image
+                            src={hospital.image || "/placeholder-hospital.jpg"}
+                            alt={hospital.name}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-slate-800 group-hover:text-primary transition-colors truncate">
+                            {hospital.name}
+                          </p>
+                          <p className="text-[11px] text-slate-500 truncate">
+                            {hospital.address}
+                          </p>
+                        </div>
+                        <i className="fa-solid fa-arrow-right text-[10px] text-slate-300 opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all pr-2"></i>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </form>
           </div>
 
           {/* Desktop Auth */}
@@ -271,13 +346,14 @@ const Navbar = () => {
                     logout();
                     router.push("/");
                   }}
-                  className={`text-sm font-medium transition-colors ${
+                  title="Logout"
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
                     shouldBeSolid
                       ? "text-primary hover:text-primary/80 cursor-pointer"
                       : "text-white hover:text-white/90 cursor-pointer"
                   }`}
                 >
-                  Logout
+                  <i className="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
               </>
             ) : (
@@ -302,13 +378,17 @@ const Navbar = () => {
             <div className="relative w-6 h-4">
               <span
                 className={`absolute w-full h-1 rounded transition-all duration-300 ${
-                  isMobileMenuOpen ? "rotate-45 top-1.5" : "top-0"
-                } ${shouldBeSolid || isMobileMenuOpen ? "bg-white" : "bg-white"}`}
+                  isMobileMenuOpen
+                    ? "rotate-45 top-1.5 bg-slate-600"
+                    : `top-0 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`
+                }`}
               />
               <span
                 className={`absolute w-full h-1 rounded transition-all duration-300 ${
-                  isMobileMenuOpen ? "-rotate-45 top-1.5" : "top-3"
-                } ${shouldBeSolid || isMobileMenuOpen ? "bg-white" : "bg-white"}`}
+                  isMobileMenuOpen
+                    ? "-rotate-45 top-1.5 bg-slate-600"
+                    : `top-3 ${shouldBeSolid ? "bg-slate-600" : "bg-white"}`
+                }`}
               />
             </div>
           </button>
@@ -316,14 +396,25 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-slide-in scrollbar-hide bg-none">
-            <div className="pt-2">
+          <div className="md:hidden py-4 border-t border-border animate-slide-in bg-white rounded-b-2xl shadow-xl px-2">
+            <form onSubmit={handleSearchSubmit} className="mb-4 relative px-2">
+              <input
+                type="text"
+                placeholder="Cari Rumah Sakit..."
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-slate-50 focus:ring-2 focus:ring-primary/10 outline-none text-sm"
+              />
+              <i className="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
+            </form>
+
+            <div className="space-y-2 px-2">
               {isAuthenticated ? (
-                <div className="space-y-2">
+                <>
                   <Link
                     href="/admin"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center space-x-3 px-4 py-3 bg-primary text-primary-foreground rounded-lg"
+                    className="flex items-center space-x-3 px-4 py-3 bg-primary text-white rounded-xl"
                   >
                     <i className="fa-solid fa-sliders"></i>
                     <span className="font-medium">Dashboard Admin</span>
@@ -334,20 +425,20 @@ const Navbar = () => {
                       router.push("/");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center space-x-3 px-4 py-3 bg-secondary rounded-lg"
+                    className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-100 text-slate-600 rounded-xl"
                   >
                     <i className="fa-solid fa-right-from-bracket" />
                     <span className="font-medium">Logout</span>
                   </button>
-                </div>
+                </>
               ) : (
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center space-x-2 px-4 py-3 bg-primary text-white rounded-lg font-medium"
+                  className="flex items-center justify-center space-x-2 px-4 py-3 bg-primary text-white rounded-xl font-medium"
                 >
                   <i className="fa-solid fa-arrow-right-to-bracket"></i>
-                  <span>Login</span>
+                  <span>Login / Register</span>
                 </Link>
               )}
             </div>

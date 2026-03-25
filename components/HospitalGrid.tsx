@@ -118,7 +118,7 @@ const HospitalGrid = () => {
           </div>
 
           <h3 className="text-base font-semibold text-foreground mb-1.5">
-            Tidak ada rumah sakit ditemukan
+            Belum tersedia saat ini, Silahkan cek kembali nanti.
           </h3>
 
           <p className="text-sm text-muted-foreground max-w-md mx-auto">

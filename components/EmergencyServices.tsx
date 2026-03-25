@@ -12,7 +12,6 @@ const emergencyServices = [
   { icon: "fa-solid fa-road", label: "Jasa Marga", number: "14080" },
   { icon: "fa-solid fa-bolt", label: "PLN", number: "123" },
   { icon: "fa-solid fa-life-ring", label: "SAR/Basarnas", number: "115" },
-  { icon: "fa-solid fa-faucet-drip", label: "PDAM", number: "144" },
   { icon: "fa-solid fa-headset", label: "Halo Kemenkes", number: "1500567" },
 ];
 

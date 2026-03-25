@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
-import FooterWrapper from "@/components/FooterWrapper"; // Kita gunakan Wrapper agar Root tetap Server Component
+import FooterWrapper from "@/components/FooterWrapper"; 
 import TutorialWrapper from "@/components/TutorialWrapper";
 import LoadingWrapper from "@/components/LoadingWrapper";
 

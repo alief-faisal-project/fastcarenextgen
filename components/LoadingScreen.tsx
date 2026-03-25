@@ -3,69 +3,68 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-interface LoadingScreenProps {
-  onLoadComplete?: () => void;
-}
-
-const LoadingScreen = ({ onLoadComplete }: LoadingScreenProps) => {
-  const [progress, setProgress] = useState(0);
+const LoadingScreen = ({ onLoadComplete }: { onLoadComplete?: () => void }) => {
+  const [step, setStep] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    // Animasi sekuensial: Munculkan potongan 1 sampai 4
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
+      setStep((prev) => {
+        if (prev >= 4) {
           clearInterval(interval);
-          setFadeOut(true);
-          setTimeout(() => onLoadComplete?.(), 500); // Sinkron dengan duration-500
-          return 100;
+          // Tunggu sebentar setelah puzzle lengkap, lalu fade out seluruh layar
+          setTimeout(() => {
+            setFadeOut(true);
+            setTimeout(() => onLoadComplete?.(), 600);
+          }, 800);
+          return 4;
         }
-        return prev + Math.random() * 15 + 5;
+        return prev + 1;
       });
-    }, 200);
+    }, 300); // Kecepatan muncul antar potongan (500ms)
+
     return () => clearInterval(interval);
   }, [onLoadComplete]);
 
+  // Definisi potongan puzzle menggunakan clip-path (Atas-Kiri, Atas-Kanan, Bawah-Kiri, Bawah-Kanan)
+  const clips = [
+    "inset(0 50% 50% 0)", // Top Left
+    "inset(0 0 50% 50%)", // Top Right
+    "inset(50% 50% 0 0)", // Bottom Left
+    "inset(50% 0 0 50%)", // Bottom Right
+  ];
+
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background transition-opacity duration-500 ${
-        fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-background transition-all duration-700 ${
+        fadeOut ? "opacity-0 scale-95" : "opacity-100"
       }`}
     >
-      <div className="flex flex-col items-center space-y-8">
-        <div className="loading-pulse">
-          <Image
-            src="/logo_sigap.png"
-            alt="FastCare.id"
-            width={200}
-            height={80}
-            className="h-16 md:h-20 w-auto object-contain"
-            priority
-          />
-        </div>
-        <p className="text-muted-foreground text-sm md:text-base font-medium">
-          Segera Temukan Pertolongan Medis Terdekat
-        </p>
-        <div className="w-64 md:w-80">
-          <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${Math.min(progress, 100)}%` }}
+      <div className="relative w-48 h-48 md:w-64 md:h-64">
+        {clips.map((clipPath, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-all duration-500 ease-out ${
+              step > index
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 -translate-y-4 scale-110"
+            }`}
+            style={{
+              clipPath: clipPath,
+              // Memberi sedikit jeda halus antar transisi
+              transitionDelay: `${index * 50}ms`,
+            }}
+          >
+            <Image
+              src="/logo_sigap.png"
+              alt="SIGAP Logo"
+              fill
+              className="object-contain"
+              priority
             />
           </div>
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Memuat data... {Math.round(Math.min(progress, 100))}%
-          </p>
-        </div>
-        <div className="flex space-x-2">
-          {[0, 150, 300].map((delay) => (
-            <div
-              key={delay}
-              className="w-2 h-2 bg-primary rounded-full animate-bounce"
-              style={{ animationDelay: `${delay}ms` }}
-            />
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
