@@ -1,4 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Format CSV Import Rumah Sakit (Admin Panel)
+
+Gunakan format dan urutan kolom berikut untuk mengimpor data rumah sakit melalui fitur Import CSV di form admin:
+
+```csv
+name,type,class,address,city,phone,image,description,facilities,totalBeds,hasIGD,hasICU,operatingHours,googleMapsLink,latitude,longitude
+Contoh RS,RS Umum,C,Jl. Contoh No.1,Kota Serang,0212345678,https://example.com/image.jpg,Deskripsi RS,IGD 24 Jam,100,true,true,24 Jam,https://maps.google.com/?q=...,-6.123456,106.123456
+```
+
+**Keterangan Kolom:**
+
+- `name`: Nama Rumah Sakit
+- `type`: Tipe RS (RS Umum, RS Swasta, RS Khusus, RS Ibu & Anak, RS Jiwa, Klinik)
+- `class`: Kelas RS (A, B, C, D, Klinik)
+- `address`: Alamat lengkap
+- `city`: Kota/Kabupaten
+- `phone`: Nomor telepon
+- `image`: URL gambar RS
+- `description`: Deskripsi singkat
+- `facilities`: Fasilitas (pisahkan dengan koma)
+- `totalBeds`: Total tempat tidur (angka)
+- `hasIGD`: IGD 24 Jam (true/false)
+- `hasICU`: ICU (true/false)
+- `operatingHours`: Jam operasional (misal: 24 Jam)
+- `googleMapsLink`: Link Google Maps
+- `latitude`: Latitude (opsional)
+- `longitude`: Longitude (opsional)
+
+**Catatan:**
+
+- Baris pertama harus header, baris kedua dan seterusnya adalah data.
+- Fitur import hanya mengisi form, tidak langsung menyimpan ke database. Silakan cek dan klik "Simpan Perubahan" setelah import.
+- Kolom `image` dari CSV tidak otomatis mengisi form, silakan upload gambar secara manual setelah import data.
+  This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 

@@ -25,7 +25,7 @@ const AdminPanel = () => {
     updateHeroBanner,
     deleteHeroBanner,
   } = useApp();
- const router = useRouter();
+  const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<AdminTab>("hospitals");
   const [showHospitalForm, setShowHospitalForm] = useState(false);
@@ -45,11 +45,11 @@ const AdminPanel = () => {
   }, [hospitals, searchQuery]);
 
   // Logic mengalihkan jika belum terautentikasi
-useEffect(() => {
-  if (!isAuthenticated) {
-    router.push("/login");
-  }
-}, [isAuthenticated, router]);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
 
   if (!isAuthenticated) return null;
 
@@ -610,6 +610,57 @@ const HospitalFormModal = ({
   const [imagePreview, setImagePreview] = useState<string>(
     hospital?.image || "",
   );
+  // CSV Import
+  const csvInputRef = useRef<HTMLInputElement>(null);
+
+  // Helper: Parse CSV row to FormState
+  function parseCsvRow(row: string[]): Partial<FormState> {
+    // Urutan kolom harus sama dengan format di README
+    return {
+      name: row[0] || "",
+      type: (row[1] as Hospital["type"]) || "RS Umum",
+      class: (row[2] as Hospital["class"]) || "C",
+      address: row[3] || "",
+      city: row[4] || "Kota Serang",
+      phone: row[5] || "",
+      // image: row[6] || "", // JANGAN auto isi image dari CSV
+      description: row[7] || "",
+      facilities: row[8] || "",
+      totalBeds: row[9] ? Number(row[9]) : 0,
+      hasIGD: row[10] ? row[10].toLowerCase() === "true" : true,
+      hasICU: row[11] ? row[11].toLowerCase() === "true" : true,
+      operatingHours: row[12] || "24 Jam",
+      googleMapsLink: row[13] || "",
+      latitude: row[14] || "",
+      longitude: row[15] || "",
+    };
+  }
+
+  // CSV Handler
+  const handleCsvImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      // Simple CSV parse (no quoted commas)
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) {
+        toast.error("File CSV harus memiliki header dan minimal 1 data!");
+        return;
+      }
+      const dataRow = lines[1].split(",");
+      const parsed = parseCsvRow(dataRow);
+      setFormData((prev) => ({ ...prev, ...parsed }));
+      // Tidak auto set imagePreview, biarkan gambar tetap manual
+      toast.success(
+        "Data dari CSV berhasil dimasukkan ke form! (Gambar tidak otomatis diisi)",
+      );
+    };
+    reader.readAsText(file);
+    // Reset input agar bisa upload file sama lagi
+    if (csvInputRef.current) csvInputRef.current.value = "";
+  };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -986,7 +1037,90 @@ const HospitalFormModal = ({
               </label>
             </div>
           </div>
-          <div className="flex items-center justify-end space-x-3 mt-6 pt-6 border-t border-border">
+          <div className="flex flex-wrap items-center justify-end gap-2 mt-6 pt-6 border-t border-border">
+            <input
+              ref={csvInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleCsvImport}
+              style={{ display: "none" }}
+            />
+            <button
+              type="button"
+              onClick={() => csvInputRef.current?.click()}
+              className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors text-sm flex items-center gap-2"
+              title="Import dari CSV"
+            >
+              <i className="fa-solid fa-file-csv" /> Import CSV
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm flex items-center gap-2"
+              title="Isi Otomatis dengan AI"
+              onClick={async () => {
+                const name = prompt(
+                  "Masukkan nama rumah sakit (misal: Siloam Lippo Karawaci):",
+                );
+
+                if (!name || name.trim() === "") return;
+
+                setIsUploading(true);
+
+                try {
+                  const res = await fetch(
+                    `/api/hospital-ai?name=${encodeURIComponent(name)}`,
+                  );
+
+                  let data;
+
+                  try {
+                    data = await res.json();
+                  } catch {
+                    throw new Error("Response AI tidak valid");
+                  }
+
+                  if (!res.ok) {
+                    throw new Error(data?.error || "Gagal mengambil data AI");
+                  }
+
+                  console.log("AI RESULT:", data);
+
+                  setFormData((prev) => ({
+                    ...prev,
+                    name: data.name || prev.name,
+                    address: data.address || prev.address,
+                    city: data.city || prev.city,
+                    province: data.province || prev.province,
+                    phone: data.phone || prev.phone,
+                    description: data.description || prev.description,
+                    type: data.type || prev.type,
+                    googleMapsLink: data.website || prev.googleMapsLink,
+
+                    // tetap manual (tidak diisi AI)
+                    image: prev.image,
+
+                    // field lain tidak diubah
+                    facilities: prev.facilities,
+                    totalBeds: prev.totalBeds,
+                    hasIGD: prev.hasIGD,
+                    hasICU: prev.hasICU,
+                    operatingHours: prev.operatingHours,
+                    latitude: prev.latitude,
+                    longitude: prev.longitude,
+                  }));
+
+                  toast.success("Data rumah sakit berhasil diisi otomatis!");
+                } catch (e: any) {
+                  console.error("FETCH AI ERROR:", e);
+                  toast.error(e.message || "Gagal mengambil data AI");
+                } finally {
+                  setIsUploading(false);
+                }
+              }}
+            >
+              <i className="fa-solid fa-robot" />
+              Isi Otomatis dengan AI
+            </button>
             <button
               type="button"
               onClick={onClose}
