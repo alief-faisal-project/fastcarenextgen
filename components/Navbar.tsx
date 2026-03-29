@@ -378,7 +378,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Content */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-slide-in bg-white rounded-b-2xl shadow-xl px-2">
+          <div className="md:hidden py-8 border-t border-border animate-slide-in bg-white rounded-b-2xl px-2">
             <div className="space-y-2 px-2">
               {isAuthenticated ? (
                 <>
@@ -396,7 +396,7 @@ const Navbar = () => {
                       router.push("/");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-100 text-slate-600 rounded-xl"
+                    className="w-full flex items-center space-x-3 px-4 py-3 bg-slate-100 text-slate-600 rounded-xl cursor-pointer"
                   >
                     <i className="fa-solid fa-right-from-bracket" />
                     <span className="font-medium">Logout</span>
