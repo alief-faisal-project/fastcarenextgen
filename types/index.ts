@@ -16,6 +16,7 @@ export interface Hospital {
   email?: string;
   website?: string;
   image: string;
+  gallery?: string[]; // Array of image URLs for hospital gallery
   description: string;
   facilities: string[];
   totalBeds: number;

@@ -232,6 +232,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         email: h.email,
         website: h.website,
         image: h.image,
+        gallery: Array.isArray(h.gallery) ? h.gallery : [],
         description: h.description,
         hasICU: h.has_icu,
         hasIGD: h.has_igd,
@@ -370,6 +371,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     email: data.email,
     website: data.website,
     image: data.image,
+    gallery: Array.isArray(data.gallery) ? data.gallery : [],
     description: data.description,
     hasICU: data.has_icu,
     hasIGD: data.has_igd,
@@ -403,6 +405,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           email: hospital.email,
           website: hospital.website,
           image: hospital.image,
+          gallery: hospital.gallery || [],
           description: hospital.description,
           has_icu: hospital.hasICU ?? false,
           has_igd: hospital.hasIGD ?? false,
@@ -485,6 +488,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           email: hospital.email,
           website: hospital.website,
           image: hospital.image,
+          gallery: hospital.gallery,
           description: hospital.description,
           has_icu: hospital.hasICU,
           has_igd: hospital.hasIGD,
@@ -965,7 +969,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 /* =========================================================
    CUSTOM HOOK
    ========================================================= */
-
 
 export function useApp() {
   const context = useContext(AppContext);

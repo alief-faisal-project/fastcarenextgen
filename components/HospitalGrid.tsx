@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import { useApp } from "@/context/AppContext";
 import HospitalCard from "./HospitalCard";
 
@@ -10,9 +9,27 @@ const HospitalGrid = () => {
 
   // State untuk menampilkan tooltip otomatis 3 detik
   const [showAutoTooltip, setShowAutoTooltip] = useState(false);
+  const [shuffledHospitals, setShuffledHospitals] = useState<typeof hospitals>(
+    [],
+  );
+
+  // Fungsi untuk shuffle array
+  const shuffleArray = useCallback((array: typeof hospitals) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  }, []);
+
+  // Shuffle hospitals saat mount atau saat data berubah
+  useEffect(() => {
+    setShuffledHospitals(shuffleArray(hospitals));
+  }, [hospitals, shuffleArray]);
 
   const filteredHospitals = useMemo(() => {
-    let result = [...hospitals];
+    let result = [...shuffledHospitals];
 
     // Filter berdasarkan kota
     if (selectedCity !== "Semua" && selectedCity !== "Lokasi Terdekat") {
@@ -38,7 +55,7 @@ const HospitalGrid = () => {
     }
 
     return result;
-  }, [hospitals, selectedCity, searchQuery, userLocation]);
+  }, [shuffledHospitals, selectedCity, searchQuery, userLocation]);
 
   // Ambil ID rumah sakit terdekat
   const nearestHospitalId =

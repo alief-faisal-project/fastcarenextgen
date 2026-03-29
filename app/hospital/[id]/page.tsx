@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { sanitizeInput } from "@/lib/security";
 import { useApp } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
+import HospitalImageGallery from "@/components/HospitalImageGallery";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const HospitalDetail = () => {
   const params = useParams();
@@ -18,6 +19,16 @@ const HospitalDetail = () => {
     if (!id) return null;
     return getHospitalById(id);
   }, [id, getHospitalById]);
+
+  // Get gallery images
+  const getGalleryImages = () => {
+    if (!hospital) return [];
+    if (hospital.gallery && hospital.gallery.length > 0) {
+      return hospital.gallery;
+    }
+    return [hospital.image];
+  };
+  const galleryImages = getGalleryImages();
 
   if (!hospital) {
     return (
@@ -47,21 +58,23 @@ const HospitalDetail = () => {
   const directionsUrl =
     hospital.latitude && hospital.longitude
       ? `https://www.google.com/maps/dir/?api=1&destination=${hospital.latitude},${hospital.longitude}`
-      : hospital.googleMapsLink
-        ? hospital.googleMapsLink
-        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            hospital.name + " " + hospital.address,
-          )}`;
+      : hospital.googleMapsLink ||
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          hospital.name + " " + hospital.address,
+        )}`;
 
   // Determine ownership type based on hospital name
   const getOwnership = () => {
-    if (hospital.name.includes("RSUD") || hospital.name.includes("RSU "))
+    if (hospital.name.includes("RSUD") || hospital.name.includes("RSU ")) {
       return "Pemerintah";
+    }
     return "Swasta";
   };
 
+  const phoneNumber = (hospital.phone || "").replaceAll(/\s+/g, "");
+
   return (
-    <div className="min-h-screen flex flex-col bg-background pt-16 lg:pt-20">
+    <div className="min-h-screen flex flex-col bg-background pt-8 lg:pt-20">
       <Navbar />
 
       {/* Main Content */}
@@ -70,50 +83,36 @@ const HospitalDetail = () => {
         <div className="hidden lg:grid lg:grid-cols-3 gap-8">
           {/* Left Column - Main Info (Desktop) */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Hero Image */}
-            {hospital && (
-              <div className="relative aspect-video overflow-hidden rounded-3xl">
-                <Image
-                  src={hospital.image}
-                  alt={hospital.name}
-                  fill
-                  sizes="(max-width:1024px) 100vw, 66vw"
-                  className="object-cover"
-                />
+            {/* Image Gallery */}
+            <HospitalImageGallery
+              images={galleryImages}
+              hospitalName={hospital.name}
+              hasIGD={hospital.hasIGD}
+            />
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                {/* badge igd */}
-                {hospital?.hasIGD && (
-                  <div className="absolute top-0 right-0 z-10">
-                    <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-bl-xl shadow-md text-center leading-tight">
-                      <span className="text-[20px] font-bold">
-                        TERSEDIA IGD 24 JAM
-                      </span>
-                    </span>
-                  </div>
-                )}
-
-                {/* Bottom Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h1 className="text-2xl font-bold text-white font-heading">
-                    {hospital.name}
-                  </h1>
-                </div>
+            {/* Hospital Name - Below Gallery (Desktop) */}
+            <div>
+              <h1 className="text-3xl font-bold text-foreground font-heading mb-2">
+                {hospital.name}
+              </h1>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <i className="fa-solid fa-location-dot" />
+                <p>
+                  {hospital.address}, {hospital.city}
+                </p>
               </div>
-            )}
+            </div>
 
             {/* Facilities & Services */}
             <div className="bg-card border border-border p-6 rounded-3xl">
               <h2 className="text-lg font-semibold text-foreground mb-4 font-heading flex items-center gap-2">
-                <i className="fa-solid fa-stethoscope text-primary" />
-                Fasilitas & Layanan
+                <i className="fa-solid fa-stethoscope" />
+                <span>Fasilitas & Layanan</span>
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {(hospital.facilities ?? []).map((facility, index) => (
+                {(hospital.facilities ?? []).map((facility) => (
                   <div
-                    key={index}
+                    key={facility}
                     className="flex items-center space-x-3 p-3 rounded-xl bg-accent/50"
                   >
                     <i className="fa-solid fa-circle-check text-primary" />
@@ -127,8 +126,8 @@ const HospitalDetail = () => {
             {hospital.description && (
               <div className="bg-card border border-border p-6 rounded-3xl">
                 <h2 className="text-lg font-semibold text-foreground mb-4 font-heading flex items-center gap-2">
-                  <i className="fa-solid fa-align-left text-primary" />
-                  Deskripsi
+                  <i className="fa-solid fa-align-left" />
+                  <span>Deskripsi</span>
                 </h2>
                 <p className="text-foreground leading-relaxed text-justify">
                   {hospital.description}
@@ -142,8 +141,8 @@ const HospitalDetail = () => {
             {/* Information */}
             <div className="bg-card border border-border p-6 rounded-3xl">
               <h3 className="text-lg font-semibold text-foreground mb-4 font-heading flex items-center gap-2">
-                <i className="fa-solid fa-circle-info text-primary" />
-                Informasi
+                <i className="fa-solid fa-circle-info" />
+                <span>Informasi</span>
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between py-2 border-b border-border">
@@ -192,27 +191,21 @@ const HospitalDetail = () => {
             {/* Action Buttons (Desktop) */}
             <div className="bg-card border border-border p-3 rounded-3xl">
               <div className="flex flex-col gap-3 w-full">
-                {/* Tombol Telepon */}
+                {/* Phone Button */}
                 <a
-                  href={`tel:${(hospital.phone || "").replace(/\s+/g, "")}`}
-                  className="w-full h-14 flex items-center justify-center gap-3
-               rounded-3xl bg-secondary
-               text-primary text-sm font-medium
-               transition-colors hover:bg-secondary/60 border"
+                  href={`tel:${phoneNumber}`}
+                  className="w-full h-14 flex items-center justify-center gap-3 rounded-3xl bg-secondary text-primary text-sm font-medium transition-colors hover:bg-secondary/60 border"
                 >
                   <i className="fa-solid fa-phone-volume w-5 text-base text-center" />
                   <span className="text-center leading-none">Telepon</span>
                 </a>
 
-                {/* Tombol Peta */}
+                {/* Maps Button */}
                 <a
                   href={directionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full h-14 flex items-center justify-center gap-3
-  rounded-3xl bg-secondary
-               text-primary text-sm font-medium
-               transition-colors hover:bg-secondary/60 border"
+                  className="w-full h-14 flex items-center justify-center gap-3 rounded-3xl bg-secondary text-primary text-sm font-medium transition-colors hover:bg-secondary/60 border"
                 >
                   <i className="fa-solid fa-location-arrow w-5 text-base text-center" />
                   <span className="text-center leading-none">Peta Lokasi</span>
@@ -221,16 +214,8 @@ const HospitalDetail = () => {
                 {/* Email */}
                 {hospital.email && (
                   <a
-                    href={`mailto:${encodeURIComponent(
-                      sanitizeInput(hospital.email),
-                    )}`}
-                    className="w-full h-14 flex items-center justify-center gap-3
-                 rounded-3xl
-                 bg-card text-foreground
-                 border border-border
-                 font-semibold text-sm
-                 transition-colors duration-300
-                 hover:bg-secondary/10"
+                    href={`mailto:${sanitizeInput(hospital.email)}`}
+                    className="w-full h-14 flex items-center justify-center gap-3 rounded-3xl bg-card text-foreground border border-border font-semibold text-sm transition-colors duration-300 hover:bg-secondary/10"
                   >
                     <i className="fa-solid fa-envelope w-5 text-base text-center" />
                     <span className="text-center leading-none">Email</span>
@@ -240,64 +225,34 @@ const HospitalDetail = () => {
             </div>
           </div>
         </div>
-        <div className="lg:hidden space-y-4 -mt-8">
-          {/* Image */}
-          <div className="relative aspect-video overflow-hidden rounded-3xl">
-            <Image
-              src={hospital.image}
-              alt={hospital.name}
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
+        {/* MOBILE LAYOUT */}
+        <div className="lg:hidden space-y-4">
+          {/* Image Gallery - with hospital name overlay for mobile */}
+          <HospitalImageGallery
+            images={galleryImages}
+            hospitalName={hospital.name}
+            hasIGD={hospital.hasIGD}
+            showNameOnMobile={true}
+          />
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-            {/* badge igd */}
-            {hospital?.hasIGD && (
-              <div className="absolute top-0 right-0 z-10">
-                <span className="flex flex-col items-center justify-center bg-red-600 text-white px-3 py-3 rounded-bl-xl shadow-md text-center leading-tight">
-                  <span className="text-[15px] font-bold">
-                    TERSEDIA IGD 24 JAM
-                  </span>
-                </span>
-              </div>
-            )}
-
-            {/* title rumah sakit */}
-            {hospital?.name && (
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h1 className="text-2xl font-bold text-white font-heading">
-                  {hospital.name}
-                </h1>
-              </div>
-            )}
-          </div>
-          {/* Baris Action Buttons(Mobile) */}
+          {/* Action Buttons (Mobile) */}
           <div className="bg-card border border-border p-3 rounded-3xl">
             <div className="flex gap-3">
-              {/* Tombol Maps */}
+              {/* Maps Button */}
               <a
                 href={directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 h-12 flex items-center justify-center gap-2 
-               rounded-3xl bg-secondary
-               text-primary text-sm font-medium
-               transition-colors  hover:bg-secondary/60"
+                className="flex-1 h-12 flex items-center justify-center gap-2 rounded-3xl bg-secondary text-primary text-sm font-medium transition-colors hover:bg-secondary/60"
               >
                 <i className="fa-solid fa-location-arrow text-base" />
                 <span className="text-center leading-none">Peta</span>
               </a>
 
-              {/* Tombol Telepon */}
+              {/* Phone Button */}
               <a
-                href={`tel:${(hospital.phone || "").replace(/\s+/g, "")}`}
-                className="flex-1 h-12 flex items-center justify-center gap-2 
-               rounded-3xl bg-secondary
-               text-primary text-sm font-medium
-               transition-colors hover:bg-secondary/60"
+                href={`tel:${phoneNumber}`}
+                className="flex-1 h-12 flex items-center justify-center gap-2 rounded-3xl bg-secondary text-primary text-sm font-medium transition-colors hover:bg-secondary/60"
               >
                 <i className="fa-solid fa-phone-volume text-base" />
                 <span className="text-center leading-none">Telepon</span>
@@ -308,13 +263,13 @@ const HospitalDetail = () => {
           {/* Facilities & Services */}
           <div className="bg-card border border-border p-6 rounded-3xl">
             <h2 className="text-lg font-semibold text-foreground mb-4 font-heading flex items-center gap-2">
-              <i className="fa-solid fa-stethoscope text-primary" />
-              Fasilitas & Layanan
+              <i className="fa-solid fa-stethoscope" />
+              <span>Fasilitas & Layanan</span>
             </h2>
             <div className="grid grid-cols-2 gap-3">
-              {(hospital.facilities ?? []).map((facility, index) => (
+              {(hospital.facilities ?? []).map((facility) => (
                 <div
-                  key={index}
+                  key={facility}
                   className="flex items-center space-x-3 p-3 rounded-xl bg-accent/50"
                 >
                   <i className="fa-solid fa-circle-check text-primary" />
@@ -382,8 +337,8 @@ const HospitalDetail = () => {
           {hospital.description && (
             <div className="bg-card border border-border p-6 rounded-3xl">
               <h2 className="text-lg font-semibold text-foreground mb-4 font-heading flex items-center gap-2">
-                <i className="fa-solid fa-align-left text-primary" />
-                Deskripsi
+                <i className="fa-solid fa-align-left" />
+                <span>Deskripsi</span>
               </h2>
               <p className="text-foreground leading-relaxed text-sm text-justify">
                 {hospital.description}
@@ -392,6 +347,9 @@ const HospitalDetail = () => {
           )}
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { useApp } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
 import { Hospital, HeroBanner, BANTEN_CITIES } from "@/types";
 import { toast } from "sonner";
+import ImageGalleryManager from "@/components/ImageGalleryManager";
 
 type AdminTab = "hospitals" | "banners" | "settings";
 
@@ -554,7 +555,6 @@ const HospitalFormModal = ({
   onSave,
 }: HospitalFormModalProps) => {
   const { uploadHospitalImage } = useApp();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   type FormState = {
     name: string;
@@ -565,6 +565,7 @@ const HospitalFormModal = ({
     district: string;
     phone: string;
     image: string;
+    gallery: string[];
     description: string;
     facilities: string;
     totalBeds: number;
@@ -585,6 +586,7 @@ const HospitalFormModal = ({
     district: hospital?.district || "",
     phone: hospital?.phone || "",
     image: hospital?.image || "",
+    gallery: hospital?.gallery || [],
     description: hospital?.description || "",
     facilities:
       hospital?.facilities && Array.isArray(hospital.facilities)
@@ -594,7 +596,6 @@ const HospitalFormModal = ({
     hasIGD: hospital?.hasIGD ?? true,
     hasICU: hospital?.hasICU ?? true,
     operatingHours: hospital?.operatingHours || "24 Jam",
-    // removed website, latitude and longitude — we only keep googleMapsLink
     googleMapsLink: hospital?.googleMapsLink || "",
     latitude:
       hospital?.latitude !== null && hospital?.latitude !== undefined
@@ -606,10 +607,7 @@ const HospitalFormModal = ({
         : "",
   });
 
-  const [isUploading, setIsUploading] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string>(
-    hospital?.image || "",
-  );
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
   // CSV Import
   const csvInputRef = useRef<HTMLInputElement>(null);
 
@@ -662,47 +660,6 @@ const HospitalFormModal = ({
     if (csvInputRef.current) csvInputRef.current.value = "";
   };
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      alert("Pilih file gambar yang valid");
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Ukuran gambar maksimal 5MB");
-      return;
-    }
-
-    try {
-      setIsUploading(true);
-      console.log("📤 Starting image upload...");
-
-      // Upload to Supabase
-      const imageUrl = await uploadHospitalImage(file);
-
-      setFormData({ ...formData, image: imageUrl });
-      setImagePreview(imageUrl);
-      console.log("✅ Image uploaded successfully:", imageUrl);
-      toast.success("Gambar berhasil diupload!");
-    } catch (error) {
-      console.error("❌ Upload failed:", error);
-      toast.error(
-        "Gagal upload gambar: " +
-          (error instanceof Error ? error.message : "Error"),
-      );
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -715,22 +672,26 @@ const HospitalFormModal = ({
       alert("Alamat tidak boleh kosong!");
       return;
     }
-    // Telepon: allow free text (some entries include extensions or notes)
     if (!formData.phone.trim()) {
       alert("Telepon tidak boleh kosong!");
-      return;
-    }
-    if (!formData.image.trim()) {
-      alert(
-        "Gambar tidak boleh kosong! Silakan upload gambar terlebih dahulu.",
-      );
       return;
     }
     if (!formData.description.trim()) {
       alert("Deskripsi tidak boleh kosong!");
       return;
     }
-    // email removed from admin form per request
+
+    // Validasi gambar: minimal harus ada 1 gambar (dari gallery atau main image lama)
+    const filteredGallery = formData.gallery.filter((img) => img.trim());
+    const mainImage =
+      filteredGallery.length > 0 ? filteredGallery[0] : formData.image;
+
+    if (!mainImage.trim()) {
+      alert(
+        "Minimal harus ada 1 gambar! Silakan upload gambar di bagian Galeri Gambar.",
+      );
+      return;
+    }
 
     // convert string "IGD, ICU" → ["IGD", "ICU"]
     const formattedFacilities = formData.facilities
@@ -745,14 +706,14 @@ const HospitalFormModal = ({
       address: formData.address.trim(),
       city: formData.city,
       phone: formData.phone.trim(),
-      image: formData.image.trim(),
+      image: mainImage,
+      gallery: filteredGallery,
       description: formData.description.trim(),
       facilities: formattedFacilities,
       totalBeds: formData.totalBeds || 0,
       hasIGD: formData.hasIGD,
       hasICU: formData.hasICU,
       operatingHours: formData.operatingHours,
-      // only include googleMapsLink; website/latitude/longitude removed per request
       googleMapsLink: formData.googleMapsLink?.trim() || "",
       // include latitude/longitude if provided by admin (convert to number)
       latitude: formData.latitude.trim()
@@ -900,43 +861,21 @@ const HospitalFormModal = ({
             </div>
             {/* Email field removed per admin request */}
             {/* Website removed per request - use Google Maps link field instead */}
-            <div>
+            <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-1">
-                Gambar Rumah Sakit *
+                Galeri Gambar Rumah Sakit *
               </label>
-
-              {/* Preview */}
-              {imagePreview && (
-                <div className="mb-3 relative w-full h-40 bg-muted rounded-lg overflow-hidden">
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
-
-              {/* Upload Options */}
-              <div className="space-y-2">
-                {/* File Upload */}
-                <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-2">
-                    Upload Gambar Lokal
-                  </label>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    disabled={isUploading}
-                    className="w-full px-4 py-2 border border-border rounded-lg text-sm cursor-pointer hover:bg-accent/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                  {isUploading && (
-                    <p className="text-xs text-primary mt-1">📤 Uploading...</p>
-                  )}
-                </div>
-              </div>
+              <p className="text-xs text-muted-foreground mb-3">
+                Upload minimal 1 gambar. Gambar pertama akan menjadi gambar
+                utama.
+              </p>
+              <ImageGalleryManager
+                images={formData.gallery}
+                onImagesChange={(newImages) =>
+                  setFormData({ ...formData, gallery: newImages })
+                }
+                onUpload={uploadHospitalImage}
+              />
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-1">
@@ -1055,71 +994,151 @@ const HospitalFormModal = ({
             </button>
             <button
               type="button"
-              className="px-4 py-2 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               title="Isi Otomatis dengan AI"
+              disabled={isLoadingAI}
               onClick={async () => {
-                const name = prompt(
-                  "Masukkan nama rumah sakit (misal: Siloam Lippo Karawaci):",
+                const hospitalName = prompt(
+                  "Masukkan nama rumah sakit:\n(misal: Siloam Lippo Karawaci, RSUD Serang, dll)",
+                  formData.name || "",
                 );
 
-                if (!name || name.trim() === "") return;
+                if (!hospitalName || hospitalName.trim() === "") {
+                  return;
+                }
 
-                setIsUploading(true);
+                setIsLoadingAI(true);
+                console.log(`[AI FORM] Starting AI fetch for: ${hospitalName}`);
 
                 try {
+                  const encodedName = encodeURIComponent(hospitalName.trim());
                   const res = await fetch(
-                    `/api/hospital-ai?name=${encodeURIComponent(name)}`,
+                    `/api/aiHospital?name=${encodedName}`,
                   );
 
-                  let data;
-
-                  try {
-                    data = await res.json();
-                  } catch {
-                    throw new Error("Response AI tidak valid");
-                  }
-
                   if (!res.ok) {
-                    throw new Error(data?.error || "Gagal mengambil data AI");
+                    const errorData = (await res.json().catch(() => ({}))) as {
+                      error?: string;
+                    };
+                    throw new Error(errorData?.error || `HTTP ${res.status}`);
                   }
 
-                  console.log("AI RESULT:", data);
+                  const data = (await res.json()) as {
+                    name?: string;
+                    address?: string;
+                    city?: string;
+                    phone?: string;
+                    description?: string;
+                    type?: string;
+                    website?: string;
+                    province?: string;
+                    emergency?: boolean;
+                    image?: string;
+                    facilities?: string;
+                    latitude?: number;
+                    longitude?: number;
+                  };
 
-                  setFormData((prev) => ({
-                    ...prev,
-                    name: data.name || prev.name,
-                    address: data.address || prev.address,
-                    city: data.city || prev.city,
-                    province: data.province || prev.province,
-                    phone: data.phone || prev.phone,
-                    description: data.description || prev.description,
-                    type: data.type || prev.type,
-                    googleMapsLink: data.website || prev.googleMapsLink,
+                  console.log("[AI FORM] AI Result:", data);
 
-                    // tetap manual (tidak diisi AI)
-                    image: prev.image,
+                  // Validasi response
+                  if (!data || typeof data !== "object") {
+                    throw new Error("Response format invalid");
+                  }
 
-                    // field lain tidak diubah
-                    facilities: prev.facilities,
-                    totalBeds: prev.totalBeds,
-                    hasIGD: prev.hasIGD,
-                    hasICU: prev.hasICU,
-                    operatingHours: prev.operatingHours,
-                    latitude: prev.latitude,
-                    longitude: prev.longitude,
-                  }));
+                  // Update form dengan smart merging
+                  setFormData((prev) => {
+                    const updated = { ...prev };
 
-                  toast.success("Data rumah sakit berhasil diisi otomatis!");
-                } catch (e: any) {
-                  console.error("FETCH AI ERROR:", e);
-                  toast.error(e.message || "Gagal mengambil data AI");
+                    // Update name jika ada dari AI
+                    if (data.name?.trim()) {
+                      updated.name = data.name.trim();
+                    }
+
+                    // Update address jika ada dari AI
+                    if (data.address?.trim()) {
+                      updated.address = data.address.trim();
+                    }
+
+                    // Update city jika ada dari AI dan valid
+                    if (data.city?.trim()) {
+                      const cityExists = BANTEN_CITIES.some(
+                        (c) => c.toLowerCase() === data.city!.toLowerCase(),
+                      );
+                      if (cityExists) {
+                        updated.city = data.city.trim();
+                      }
+                    }
+
+                    // Update phone jika ada dari AI
+                    if (data.phone?.trim()) {
+                      updated.phone = data.phone.trim();
+                    }
+
+                    // Update description jika ada dari AI
+                    if (data.description?.trim()) {
+                      updated.description = data.description.trim();
+                    }
+
+                    // Update type jika ada dari AI
+                    if (data.type?.trim()) {
+                      updated.type = data.type.trim() as Hospital["type"];
+                    }
+
+                    // Website → googleMapsLink (untuk kompatibilitas)
+                    if (data.website?.trim()) {
+                      updated.googleMapsLink = data.website.trim();
+                    }
+
+                    // Update facilities dari AI
+                    if (data.facilities?.trim()) {
+                      updated.facilities = data.facilities.trim();
+                    }
+
+                    // Update latitude dari AI
+                    if (
+                      typeof data.latitude === "number" &&
+                      data.latitude !== 0
+                    ) {
+                      updated.latitude = String(data.latitude);
+                    }
+
+                    // Update longitude dari AI
+                    if (
+                      typeof data.longitude === "number" &&
+                      data.longitude !== 0
+                    ) {
+                      updated.longitude = String(data.longitude);
+                    }
+
+                    return updated;
+                  });
+
+                  toast.success(
+                    `✅ Data rumah sakit "${hospitalName}" berhasil diisi otomatis!`,
+                  );
+                  console.log("[AI FORM] Form updated successfully");
+                } catch (error) {
+                  const errorMsg =
+                    error instanceof Error ? error.message : "Unknown error";
+                  console.error("[AI FORM] Error:", errorMsg);
+                  toast.error(`❌ Gagal mengambil data AI: ${errorMsg}`);
                 } finally {
-                  setIsUploading(false);
+                  setIsLoadingAI(false);
                 }
               }}
             >
-              <i className="fa-solid fa-robot" />
-              Isi Otomatis dengan AI
+              {isLoadingAI ? (
+                <>
+                  <i className="fa-solid fa-spinner animate-spin" />
+                  Sedang mengambil data...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-robot" />
+                  Isi Otomatis dengan AI
+                </>
+              )}
             </button>
             <button
               type="button"
@@ -1130,7 +1149,6 @@ const HospitalFormModal = ({
             </button>
             <button
               type="submit"
-              disabled={isUploading}
               className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {hospital ? "Simpan Perubahan" : "Tambah Rumah Sakit"}
