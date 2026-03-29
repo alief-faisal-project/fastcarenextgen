@@ -211,8 +211,8 @@ const HeroBanner = () => {
             {/* MOBILE INDICATOR (Pill Active, Circle Inactive) */}
             {activeBanners.length > 1 && (
               <div className="flex items-center justify-center gap-1.5 mt-5">
-                {/* slice(0, 2) */}
-                {activeBanners.slice(0, 2).map((_, idx) => (
+                {/* slice(0, 3) */}
+                {activeBanners.slice(0, 3).map((_, idx) => (
                   <div
                     key={idx}
                     className={`h-2 rounded-full transition-all duration-300 ${
