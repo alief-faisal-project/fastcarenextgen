@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { fetchHospitalAI, HospitalAIResult } from "@/lib/aiHospital";
+import { fetchHospitalAI } from "@/lib/aiHospital";
 
 export interface HospitalAIResponse {
   name: string;
@@ -11,55 +11,62 @@ export interface HospitalAIResponse {
   description: string;
   type: string;
   emergency: boolean;
-  image: string; // Always empty, never from AI
+  image: string; // selalu manual
+}
+
+function emptyResponse(): HospitalAIResponse {
+  return {
+    name: "",
+    address: "",
+    city: "",
+    province: "",
+    phone: "",
+    website: "",
+    description: "",
+    type: "",
+    emergency: false,
+    image: "",
+  };
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<HospitalAIResponse | { error: string }>
+  res: NextApiResponse<HospitalAIResponse | { error: string }>,
 ) {
-  // Only GET method
+  // Method check
   if (req.method !== "GET") {
     res.setHeader("Allow", ["GET"]);
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Validate name query
   const name = typeof req.query.name === "string" ? req.query.name.trim() : "";
+
+  // Jika kosong → tetap return aman
   if (!name) {
-    // Always return 200 with empty data structure
-    return res.status(200).json({
-      name: "",
-      address: "",
-      city: "",
-      province: "",
-      phone: "",
-      website: "",
-      description: "",
-      type: "",
-      emergency: false,
-      image: "",
-    });
+    return res.status(200).json(emptyResponse());
   }
 
-  // Fetch from AI (always succeeds, returns empty on failure)
-  const aiResult = await fetchHospitalAI(name);
+  let aiResult;
 
-  // Normalize response - image ALWAYS empty
+  try {
+    aiResult = await fetchHospitalAI(name);
+  } catch (e) {
+    console.error("API ERROR:", e);
+    aiResult = {};
+  }
+
   const response: HospitalAIResponse = {
-    name: aiResult.name,
-    address: aiResult.address,
-    city: aiResult.city,
-    province: aiResult.province,
-    phone: aiResult.phone,
-    website: aiResult.website,
-    description: aiResult.description,
-    type: aiResult.type,
-    emergency: aiResult.emergency,
-    image: "", // CRITICAL: Always empty, ignore any AI image
+    name: aiResult?.name || name,
+    address: aiResult?.address || "",
+    city: aiResult?.city || "",
+    province: aiResult?.province || "",
+    phone: aiResult?.phone || "",
+    website: aiResult?.website || "",
+    description: aiResult?.description || "",
+    type: aiResult?.type || "",
+    emergency: aiResult?.emergency ?? false,
+    image: "", // WAJIB kosong
   };
 
-  // ALWAYS 200, even if empty data
-  res.status(200).json(response);
+  return res.status(200).json(response);
 }
-
