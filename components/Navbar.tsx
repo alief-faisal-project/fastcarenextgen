@@ -355,10 +355,22 @@ const Navbar = () => {
           >
             <div className="relative w-6 h-4">
               <span
-                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 top-1.5 bg-white" : `top-0 ${shouldBeSolid ? "bg-white" : "bg-white"}`}`}
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${
+                  isMobileMenuOpen
+                    ? `rotate-45 top-1.5 ${
+                        shouldBeSolid ? "bg-primary" : "bg-white"
+                      }`
+                    : `top-0 ${shouldBeSolid ? "bg-primary" : "bg-white"}`
+                }`}
               />
               <span
-                className={`absolute w-full h-1 rounded transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 top-1.5 bg-white" : `top-3 ${shouldBeSolid ? "bg-white" : "bg-white"}`}`}
+                className={`absolute w-full h-1 rounded transition-all duration-300 ${
+                  isMobileMenuOpen
+                    ? `-rotate-45 top-1.5 ${
+                        shouldBeSolid ? "bg-primary" : "bg-white"
+                      }`
+                    : `top-3 ${shouldBeSolid ? "bg-primary" : "bg-white"}`
+                }`}
               />
             </div>
           </button>
