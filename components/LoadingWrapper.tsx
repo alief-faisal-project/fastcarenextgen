@@ -3,42 +3,42 @@
 import { useState, useEffect } from "react";
 import LoadingScreen from "./LoadingScreen";
 
-let hasLoaded = false; // GLOBAL FLAG (penting)
-
 export default function LoadingWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isReady, setIsReady] = useState(hasLoaded);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Kalau sudah pernah load, langsung skip
-    if (hasLoaded) return;
-
+    // Simulasi pengambilan data API nyata (misal: config, user profile, dll)
     const fetchData = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // simulasi
+        // Contoh: await fetch('/api/config');
+        // Atau: await Promise.all([data1, data2]);
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulasi network delay
+        setIsReady(true);
       } catch (error) {
         console.error("Gagal memuat data:", error);
-      } finally {
-        hasLoaded = true; // tandai sudah pernah load
-        setIsReady(true);
+        setIsReady(true); // Tetap masuk agar user tidak terjebak di loading screen
       }
     };
 
     fetchData();
   }, []);
 
-  // Saat loading pertama
-  if (!isReady) {
-    return <LoadingScreen onLoadComplete={() => setIsReady(true)} />;
-  }
-
-  // Setelah ready
   return (
-    <div className="opacity-100 transition-opacity duration-500">
-      {children}
-    </div>
+    <>
+      {!isReady && <LoadingScreen />}
+      <div
+        className={
+          !isReady
+            ? "opacity-0 hidden"
+            : "opacity-100 transition-opacity duration-500"
+        }
+      >
+        {children}
+      </div>
+    </>
   );
 }

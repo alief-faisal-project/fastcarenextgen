@@ -13,7 +13,7 @@ const LoadingScreen = ({ onLoadComplete }: { onLoadComplete?: () => void }) => {
       setStep((prev) => {
         if (prev >= 4) {
           clearInterval(interval);
-          // Tunggu sebentar setelah puzzle lengkap, lalu fade out seluruh layar
+          // puzzle loading screen
           setTimeout(() => {
             setFadeOut(true);
             setTimeout(() => onLoadComplete?.(), 600);
@@ -22,7 +22,7 @@ const LoadingScreen = ({ onLoadComplete }: { onLoadComplete?: () => void }) => {
         }
         return prev + 1;
       });
-    }, 200); // Kecepatan muncul antar potongan (500ms)
+    }, 200); // Kecepatan muncul antar potongan
 
     return () => clearInterval(interval);
   }, [onLoadComplete]);

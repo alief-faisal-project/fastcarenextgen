@@ -61,21 +61,8 @@ const HospitalDetail = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background pt-16 lg:pt-20">
       <Navbar />
-
-      {/* Breadcrumb / Back Button */}
-      <div className="container mx-auto px-4 py-6">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 ease-in-out"
-        >
-          <div className="flex h-7 w-7 items-center justify-center rounded-full border border-transparent group-hover:border-border group-hover:bg-secondary/50 transition-all">
-            <i className="fa-solid fa-chevron-left text-[10px]" />
-          </div>
-          <span>Kembali</span>
-        </Link>
-      </div>
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 pb-12">
@@ -253,7 +240,7 @@ const HospitalDetail = () => {
             </div>
           </div>
         </div>
-        <div className="lg:hidden space-y-6">
+        <div className="lg:hidden space-y-4 -mt-8">
           {/* Image */}
           <div className="relative aspect-video overflow-hidden rounded-3xl">
             <Image
