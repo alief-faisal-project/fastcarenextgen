@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useApp } from "@/context/AppContext";
+import { INDONESIA_REGIONS, BantenCity } from "@/types";
 
 interface MobileBottomNavProps {
   onLocationDetect?: () => void;
@@ -12,33 +13,52 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   onLocationDetect,
 }) => {
   const router = useRouter();
-  const { detectLocation } = useApp();
+  const {
+    detectLocation,
+    searchQuery,
+    setSearchQuery,
+    selectedCity,
+    setSelectedCity,
+  } = useApp();
+
+  // ===============================
+  // STATE
+  // ===============================
   const [refreshCount, setRefreshCount] = useState(0);
   const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const [searchClickCount, setSearchClickCount] = useState(0);
+  const searchClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [searchValue, setSearchValue] = useState("");
+
   const [isDetecting, setIsDetecting] = useState(false);
+
   const [homeClickCount, setHomeClickCount] = useState(0);
   const homeClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Handle location detection / refresh
+  // dropdown wilayah
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [openProvinces, setOpenProvinces] = useState<Record<string, boolean>>(
+    {},
+  );
+
+  // ===============================
+  // LOCATION BUTTON
+  // ===============================
   const handleLocationClick = async () => {
     setRefreshCount((prev) => prev + 1);
 
-    // Clear existing timeout
     if (refreshTimeoutRef.current) {
       clearTimeout(refreshTimeoutRef.current);
     }
 
-    // If this is the second tap within 800ms, refresh
     if (refreshCount === 1) {
-      // Double tap - refresh the page
       window.scrollTo({ top: 0, behavior: "smooth" });
       router.refresh();
       setRefreshCount(0);
     } else {
-      // Single tap - detect location
       setRefreshCount(1);
       setIsDetecting(true);
       try {
@@ -49,174 +69,222 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
       } catch (error) {
-        console.error("Error detecting location:", error);
-        alert("Gagal mendeteksi lokasi. Pastikan izin lokasi diaktifkan.");
+        alert("Gagal mendeteksi lokasi.");
       } finally {
         setIsDetecting(false);
       }
 
-      // Reset counter after 800ms if only single tap
       refreshTimeoutRef.current = setTimeout(() => {
         setRefreshCount(0);
       }, 800);
     }
   };
 
-  // Handle home button - double click to refresh
+  // ===============================
+  // HOME
+  // ===============================
   const handleHomeClick = () => {
     setHomeClickCount((prev) => prev + 1);
 
-    // Clear existing timeout
     if (homeClickTimeoutRef.current) {
       clearTimeout(homeClickTimeoutRef.current);
     }
 
-    // If this is the second tap within 800ms, refresh
     if (homeClickCount === 1) {
-      // Double tap - refresh the page
       window.scrollTo({ top: 0, behavior: "smooth" });
       router.refresh();
       setHomeClickCount(0);
     } else {
-      // Single tap - go to home
       router.push("/");
       setHomeClickCount(0);
       return;
     }
 
-    // Reset counter after 800ms if only single tap
     homeClickTimeoutRef.current = setTimeout(() => {
       setHomeClickCount(0);
     }, 800);
   };
 
-  // Handle search
+  // ===============================
+  // SEARCH BUTTON (DOUBLE TAP CLOSE)
+  // ===============================
   const handleSearchClick = () => {
-    setShowSearchInput(true);
-    setTimeout(() => {
-      searchInputRef.current?.focus();
-    }, 100);
+    setSearchClickCount((prev) => prev + 1);
+
+    if (searchClickTimeoutRef.current) {
+      clearTimeout(searchClickTimeoutRef.current);
+    }
+
+    if (searchClickCount === 1) {
+      // double tap → close
+      setShowSearchInput(false);
+      setSearchClickCount(0);
+      return;
+    } else {
+      // single tap → open
+      setShowSearchInput(true);
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    }
+
+    searchClickTimeoutRef.current = setTimeout(() => {
+      setSearchClickCount(0);
+    }, 800);
   };
 
+  // ===============================
+  // SEARCH SUBMIT (ENTER ONLY)
+  // ===============================
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchValue.trim()) {
-      router.push(`/?search=${encodeURIComponent(searchValue.trim())}`);
-      setSearchValue("");
-      setShowSearchInput(false);
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(`/?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
-  const handleSearchClose = () => {
-    setSearchValue("");
-    setShowSearchInput(false);
+  // ===============================
+  // DROPDOWN PROVINSI
+  // ===============================
+  const toggleProvince = (province: string) => {
+    setOpenProvinces((prev) => ({
+      ...prev,
+      [province]: !prev[province],
+    }));
   };
 
+  const handleCitySelect = (city: BantenCity | "Semua") => {
+    setSelectedCity(city);
+    setIsLocationOpen(false);
+  };
+
+  // ===============================
+  // WHATSAPP
+  // ===============================
   const handleWhatsAppClick = () => {
-    // Open WhatsApp - dapat disesuaikan dengan nomor tertentu
-    const whatsappUrl = "https://wa.me/?text=Halo%20FastCare";
-    window.open(whatsappUrl, "_blank");
+    window.open("https://wa.me/?text=Halo%20FastCare", "_blank");
   };
-
-  // Close search input when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        showSearchInput &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(e.target as Node)
-      ) {
-        // Check if click is not on the search button
-        const target = e.target as HTMLElement;
-        if (!target.closest("[data-search-button]")) {
-          handleSearchClose();
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showSearchInput]);
 
   return (
     <>
-      {/* Search Bar - Full width when active */}
+      {/* SEARCH BAR */}
       {showSearchInput && (
         <div className="fixed bottom-20 left-0 right-0 bg-background border-t border-border px-4 py-3 z-40 lg:hidden">
-          <div className="flex gap-2 items-center">
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Cari Layanan Medis Terdekat..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={handleSearchSubmit}
-              className="flex-1 px-4 py-2 rounded-2xl border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              autoFocus
-            />
-            <button
-              onClick={handleSearchClose}
-              className="px-3 py-2 rounded-2xl bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
-            >
-              <i className="fa-solid fa-xmark text-lg" />
-            </button>
+          <div className="flex flex-col gap-2">
+            {/* DROPDOWN WILAYAH */}
+            <div className="relative">
+              <button
+                onClick={() => setIsLocationOpen(!isLocationOpen)}
+                className="w-full flex items-center justify-between px-4 py-2 rounded-xl border border-border bg-card"
+              >
+                <span className="text-sm flex items-center gap-2">
+                  <i className="fa-solid fa-globe"></i>
+                  {selectedCity === "Semua"
+                    ? "Pilih Berdasarkan Wilayah"
+                    : selectedCity}
+                </span>
+                <i className="fa-solid fa-chevron-down text-xs" />
+              </button>
+
+              {isLocationOpen && (
+                <div className="absolute bottom-full mb-2 left-0 right-0 bg-card border border-border rounded-xl max-h-60 overflow-y-auto z-50">
+                  <button
+                    onClick={() => handleCitySelect("Semua")}
+                    className="w-full text-left px-4 py-2 hover:bg-accent flex items-center gap-2"
+                  >
+                    <i className="fa-solid fa-globe"></i>
+                    <span>Semua Wilayah</span>
+                  </button>
+
+                  {Object.entries(INDONESIA_REGIONS).map(
+                    ([province, cities]) => {
+                      const isOpen = openProvinces[province];
+
+                      return (
+                        <div key={province}>
+                          <button
+                            onClick={() => toggleProvince(province)}
+                            className="w-full flex justify-between px-4 py-2 text-xm "
+                          >
+                            {province}
+                            <i
+                              className={`fa-solid fa-chevron-down ${
+                                isOpen ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+
+                          {isOpen &&
+                            cities.map((city) => (
+                              <button
+                                key={city}
+                                onClick={() => handleCitySelect(city)}
+                                className="w-full text-left px-6 py-2 hover:bg-accent"
+                              >
+                                {city}
+                              </button>
+                            ))}
+                        </div>
+                      );
+                    },
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* INPUT SEARCH */}
+            <div className="relative">
+              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Cari Layanan Medis Terdekat..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchSubmit}
+                className="w-full pl-12 pr-4 py-2 border border-border rounded-xl bg-card"
+              />
+            </div>
           </div>
         </div>
       )}
 
-      {/* Bottom Navigation Bar */}
+      {/* BOTTOM NAV */}
       <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 lg:hidden">
         <div className="flex items-center justify-around h-20">
-          {/* Home */}
           <button
             onClick={handleHomeClick}
-            className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
-            title="Beranda (Dobel klik untuk refresh)"
+            className="flex flex-col items-center w-full"
           >
             <i className="fa-solid fa-home text-xl" />
-            <span className="text-xs font-medium">Beranda</span>
+            <span className="text-xs">Beranda</span>
           </button>
 
-          {/* Search */}
           <button
             onClick={handleSearchClick}
-            data-search-button
-            className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
-            title="Cari"
+            className="flex flex-col items-center w-full"
           >
             <i className="fa-solid fa-magnifying-glass text-xl" />
-            <span className="text-xs font-medium">Cari</span>
+            <span className="text-xs">Cari</span>
           </button>
 
-          {/* Detect Nearest Location / Refresh */}
           <button
             onClick={handleLocationClick}
-            disabled={isDetecting}
-            className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground hover:text-primary transition-colors duration-200 disabled:opacity-50"
-            title="Deteksi Lokasi Terdekat (Dobel klik untuk refresh)"
+            className="flex flex-col items-center w-full"
           >
-            <i
-              className={`fa-solid fa-location-crosshairs text-xl ${isDetecting ? "animate-spin" : ""}`}
-            />
-            <span className="text-xs font-medium">
-              {isDetecting ? "Deteksi..." : "Lokasi"}
-            </span>
+            <i className="fa-solid fa-location-crosshairs text-xl" />
+            <span className="text-xs">Lokasi</span>
           </button>
 
-          {/* Chat / WhatsApp */}
           <button
             onClick={handleWhatsAppClick}
-            className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground hover:text-primary transition-colors duration-200"
-            title="Chat"
+            className="flex flex-col items-center w-full"
           >
             <i className="fa-solid fa-headset text-xl" />
-            <span className="text-xs font-medium">Bantuan</span>
+            <span className="text-xs">Bantuan</span>
           </button>
         </div>
       </nav>
 
-      {/* Spacer to prevent content overlap on mobile */}
       <div className="h-20 lg:hidden" />
     </>
   );
