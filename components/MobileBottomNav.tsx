@@ -264,7 +264,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             className="flex flex-col items-center w-full"
           >
             <i className="fa-solid fa-magnifying-glass text-xl" />
-            <span className="text-xs">Cari</span>
+            <span className="text-xs">Cari Layanan</span>
           </button>
 
           <button
