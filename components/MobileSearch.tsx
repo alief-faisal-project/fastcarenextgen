@@ -73,7 +73,7 @@ const MobileSearch = () => {
   };
 
   return (
-    <div className="md:hidden px-4 py-3 bg-background border-b border-border">
+    <div className="md:hidden px-4 py-3 bg-background border-b border-border -mt-8">
       <div className="flex flex-col gap-3">
         {/* Input pencarian */}
         <div className="relative">
