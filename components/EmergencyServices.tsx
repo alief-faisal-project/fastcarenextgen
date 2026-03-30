@@ -74,7 +74,7 @@ return (
           showTooltip ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
-        <span className="text-[10px] text-gray-400 italic flex items-center gap-1.5">
+        <span className="text-[10px] text-gray-400 italic flex items-center gap-1.5 -mt-5">
           <i className="fa-solid fa-arrow-right-long animate-pulse" />
           geser untuk melihat nomor darurat lainnya
         </span>
