@@ -308,7 +308,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 isDetecting ? "animate-spin" : ""
               }`}
             />
-            <span className="text-xs">Lokasi</span>
+            <span className="text-xs">Deteksi Lokasi</span>
           </button>
 
           <button
