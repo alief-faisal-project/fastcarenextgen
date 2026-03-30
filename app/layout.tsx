@@ -10,7 +10,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import FooterWrapper from "@/components/FooterWrapper"; 
 import TutorialWrapper from "@/components/TutorialWrapper";
 import LoadingWrapper from "@/components/LoadingWrapper";
-import { Analytics } from "@vercel/analytics/next";
+
 
 config.autoAddCss = false;
 

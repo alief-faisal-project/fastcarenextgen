@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useState, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import { INDONESIA_REGIONS, BantenCity } from "@/types";
 
@@ -13,6 +13,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   onLocationDetect,
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
+
   const {
     detectLocation,
     searchQuery,
@@ -34,15 +36,25 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [isDetecting, setIsDetecting] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const [homeClickCount, setHomeClickCount] = useState(0);
   const homeClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // dropdown wilayah
+  // Dropdown wilayah
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [openProvinces, setOpenProvinces] = useState<Record<string, boolean>>(
     {},
   );
+
+  const locationBtnRef = useRef<HTMLButtonElement>(null);
+
+  // ===============================
+  // FORMAT TEXT (HAPUS UNDERSCORE)
+  // ===============================
+  const formatRegionName = (name: string) => {
+    return name.replace(/_/g, " ");
+  };
 
   // ===============================
   // LOCATION BUTTON
@@ -55,19 +67,25 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     }
 
     if (refreshCount === 1) {
+      // Double click → refresh
       window.scrollTo({ top: 0, behavior: "smooth" });
       router.refresh();
       setRefreshCount(0);
     } else {
+      // Single click → detect location
       setRefreshCount(1);
       setIsDetecting(true);
+
       try {
         if (onLocationDetect) {
-          onLocationDetect();
+          await onLocationDetect();
         } else {
           await detectLocation();
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
+
+        setShowTooltip(true);
+        setTimeout(() => setShowTooltip(false), 2000);
       } catch (error) {
         alert("Gagal mendeteksi lokasi.");
       } finally {
@@ -81,7 +99,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   // ===============================
-  // HOME
+  // HOME BUTTON
   // ===============================
   const handleHomeClick = () => {
     setHomeClickCount((prev) => prev + 1);
@@ -90,14 +108,17 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
       clearTimeout(homeClickTimeoutRef.current);
     }
 
-    if (homeClickCount === 1) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      router.refresh();
-      setHomeClickCount(0);
-    } else {
+    if (pathname !== "/") {
       router.push("/");
       setHomeClickCount(0);
       return;
+    }
+
+    if (homeClickCount === 1) {
+      router.refresh();
+      setHomeClickCount(0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     homeClickTimeoutRef.current = setTimeout(() => {
@@ -106,7 +127,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   // ===============================
-  // SEARCH BUTTON (DOUBLE TAP CLOSE)
+  // SEARCH BUTTON
   // ===============================
   const handleSearchClick = () => {
     setSearchClickCount((prev) => prev + 1);
@@ -116,16 +137,13 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     }
 
     if (searchClickCount === 1) {
-      // double tap → close
+      // Double tap → close
       setShowSearchInput(false);
       setSearchClickCount(0);
       return;
     } else {
-      // single tap → open
+      // Single tap → open
       setShowSearchInput(true);
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 100);
     }
 
     searchClickTimeoutRef.current = setTimeout(() => {
@@ -134,7 +152,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   // ===============================
-  // SEARCH SUBMIT (ENTER ONLY)
+  // SEARCH SUBMIT
   // ===============================
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchQuery.trim()) {
@@ -143,7 +161,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   // ===============================
-  // DROPDOWN PROVINSI
+  // DROPDOWN PROVINCE
   // ===============================
   const toggleProvince = (province: string) => {
     setOpenProvinces((prev) => ({
@@ -158,7 +176,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   // ===============================
-  // WHATSAPP
+  // WHATSAPP BUTTON
   // ===============================
   const handleWhatsAppClick = () => {
     window.open("https://wa.me/?text=Halo%20FastCare", "_blank");
@@ -166,33 +184,41 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
   return (
     <>
-      {/* SEARCH BAR */}
+      {/* ===============================
+          SEARCH BAR
+      =============================== */}
       {showSearchInput && (
-        <div className="fixed bottom-20 left-0 right-0 bg-background border-t border-border px-4 py-3 z-40 lg:hidden">
-          <div className="flex flex-col gap-2">
-            {/* DROPDOWN WILAYAH */}
+        <div className="fixed bottom-20 left-0 right-0 z-40 lg:hidden flex justify-center px-3">
+          <div className="w-full max-w-xs bg-background border border-border shadow-sm">
+            {/* DROPDOWN */}
             <div className="relative">
               <button
                 onClick={() => setIsLocationOpen(!isLocationOpen)}
-                className="w-full flex items-center justify-between px-4 py-2 rounded-xl border border-border bg-card"
+                className="w-full flex items-center px-3 py-2 text-xs border-b border-border transition-all duration-150 hover:bg-accent active:scale-95"
               >
-                <span className="text-sm flex items-center gap-2">
-                  <i className="fa-solid fa-globe"></i>
+                <span className="flex items-center gap-2">
+                  <i className="fa-solid fa-globe w-4 text-center"></i>
                   {selectedCity === "Semua"
-                    ? "Pilih Berdasarkan Wilayah"
-                    : selectedCity}
+                    ? "Pilih Wilayah"
+                    : formatRegionName(selectedCity)}
                 </span>
-                <i className="fa-solid fa-chevron-down text-xs" />
+
+                <i
+                  className={`fa-solid fa-chevron-down text-[10px] ml-auto ${
+                    isLocationOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
               {isLocationOpen && (
-                <div className="absolute bottom-full mb-2 left-0 right-0 bg-card border border-border rounded-xl max-h-60 overflow-y-auto z-50">
+                <div className="absolute bottom-full left-0 w-full bg-background border border-border max-h-52 overflow-y-auto z-50 no-scrollbar">
+                  {/* Semua Wilayah */}
                   <button
                     onClick={() => handleCitySelect("Semua")}
-                    className="w-full text-left px-4 py-2 hover:bg-accent flex items-center gap-2"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs border-b border-border transition-all duration-150 hover:bg-accent active:scale-95"
                   >
-                    <i className="fa-solid fa-globe"></i>
-                    <span>Semua Wilayah</span>
+                    <i className="fa-solid fa-globe w-4 text-center"></i>
+                    Semua Wilayah
                   </button>
 
                   {Object.entries(INDONESIA_REGIONS).map(
@@ -203,11 +229,15 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                         <div key={province}>
                           <button
                             onClick={() => toggleProvince(province)}
-                            className="w-full flex justify-between px-4 py-2 text-xm "
+                            className="w-full flex items-center px-3 py-2 text-xs border-b border-border transition-all duration-150 hover:bg-accent active:scale-95"
                           >
-                            {province}
+                            <span className="flex items-center gap-2">
+                              <span className="w-4"></span>
+                              {formatRegionName(province)}
+                            </span>
+
                             <i
-                              className={`fa-solid fa-chevron-down ${
+                              className={`fa-solid fa-chevron-down text-[10px] ml-auto ${
                                 isOpen ? "rotate-180" : ""
                               }`}
                             />
@@ -218,9 +248,10 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                               <button
                                 key={city}
                                 onClick={() => handleCitySelect(city)}
-                                className="w-full text-left px-6 py-2 hover:bg-accent"
+                                className="w-full flex items-center gap-2 px-3 py-2 text-xs border-b border-border transition-all duration-150 hover:bg-accent active:scale-95"
                               >
-                                {city}
+                                <span className="w-4"></span>
+                                {formatRegionName(city)}
                               </button>
                             ))}
                         </div>
@@ -230,30 +261,30 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 </div>
               )}
             </div>
-
-            {/* INPUT SEARCH */}
-            <div className="relative">
-              <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Cari Layanan Medis Terdekat..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchSubmit}
-                className="w-full pl-12 pr-4 py-2 border border-border rounded-xl bg-card"
-              />
-            </div>
           </div>
         </div>
       )}
 
-      {/* BOTTOM NAV */}
+      {/* ===============================
+          TOOLTIP LOKASI
+      =============================== */}
+      {/* Ubah nilai bottom untuk atur posisi */}
+      {showTooltip && (
+        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 z-50">
+          <div className="bg-black text-white text-xs px-3 py-1">
+            Lokasi terdeteksi
+          </div>
+        </div>
+      )}
+
+      {/* ===============================
+          BOTTOM NAVIGATION
+      =============================== */}
       <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50 lg:hidden">
         <div className="flex items-center justify-around h-20">
           <button
             onClick={handleHomeClick}
-            className="flex flex-col items-center w-full"
+            className="flex flex-col items-center w-full transition-all duration-150 hover:opacity-80 active:scale-95"
           >
             <i className="fa-solid fa-home text-xl" />
             <span className="text-xs">Beranda</span>
@@ -261,23 +292,28 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
           <button
             onClick={handleSearchClick}
-            className="flex flex-col items-center w-full"
+            className="flex flex-col items-center w-full transition-all duration-150 hover:opacity-80 active:scale-95"
           >
-            <i className="fa-solid fa-magnifying-glass text-xl" />
-            <span className="text-xs">Cari Layanan</span>
+            <i className="fa-solid fa-globe text-xl" />
+            <span className="text-xs">Pilih Wilayah</span>
           </button>
 
           <button
+            ref={locationBtnRef}
             onClick={handleLocationClick}
-            className="flex flex-col items-center w-full"
+            className="flex flex-col items-center w-full transition-all duration-150 hover:opacity-80 active:scale-95"
           >
-            <i className="fa-solid fa-location-crosshairs text-xl" />
+            <i
+              className={`fa-solid fa-location-crosshairs text-xl ${
+                isDetecting ? "animate-spin" : ""
+              }`}
+            />
             <span className="text-xs">Lokasi</span>
           </button>
 
           <button
             onClick={handleWhatsAppClick}
-            className="flex flex-col items-center w-full"
+            className="flex flex-col items-center w-full transition-all duration-150 hover:opacity-80 active:scale-95"
           >
             <i className="fa-solid fa-headset text-xl" />
             <span className="text-xs">Bantuan</span>

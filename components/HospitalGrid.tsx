@@ -121,7 +121,7 @@ const HospitalGrid = () => {
                       }
                     `}
                   >
-                    Terdekat dari Lokasi Anda Saat Ini
+                    Layanan Terdekat
                   </div>
                 )}
               </div>

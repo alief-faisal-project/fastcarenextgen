@@ -35,7 +35,7 @@ const Footer = () => {
   return (
     <>
       {/* TOP FOOTER MOBILE (Ramping & Ikon di Sisi) */}
-      <section className="md:hidden bg-primary text-white py-5 px-6 mt-4">
+      <section className="md:hidden bg-primary text-white py-5 px-6 mt-2 mb-12">
         <div className="flex items-start gap-4">
           {/* Ikon di Sisi Kiri */}
           <div className="text-2xl mt-1 text-white/90">
@@ -58,49 +58,6 @@ const Footer = () => {
           <div className="flex flex-col items-center gap-8">
             {/* CTA UTAMA (DIATAS) */}
             <div className="w-full flex justify-center"></div>
-
-            {/* NAVIGATION LINKS */}
-            <nav className="flex flex-col items-center gap-4 text-xs text-white/80 tracking-wide">
-              {/* Baris Atas: Tombol Sebaris */}
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => openDialog("dukung")}
-                  className="hover:text-white hover:underline decoration-yellow-500 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[12px]"
-                >
-                  INFORMASI
-                </button>
-
-                {/* Garis Pemisah Vertikal */}
-                <div className="h-3 w-[1px] bg-white/30" />
-
-                <button
-                  onClick={() => openDialog("menu")}
-                  className="hover:text-white hover:underline decoration-yellow-500 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[12px]"
-                >
-                  BANTUAN
-                </button>
-              </div>
-
-              {/* Baris Bawah: Sumber Data */}
-              <a
-                href="https://sirs.kemkes.go.id"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white hover:underline decoration-yellow-500 underline-offset-8 transition-all uppercase tracking-[0.2em] text-[10px]"
-              >
-                Sumber Data: SIRS Kemkes RI
-              </a>
-            </nav>
-
-            {/* COPYRIGHT AREA */}
-            <div className="flex flex-col items-center gap-3 w-full pt-8 border-t border-white/10 text-center">
-              <div className="text-[10px] text-white/40 uppercase tracking-[0.2em]">
-                © {new Date().getFullYear()} SIGAP
-              </div>
-              <p className="text-[9px] text-white/30 italic">
-                Seluruh hak cipta dilindungi undang-undang.
-              </p>
-            </div>
           </div>
         </div>
       </footer>
